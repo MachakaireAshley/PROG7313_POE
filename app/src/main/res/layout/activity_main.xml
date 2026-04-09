@@ -17,4 +17,10 @@
         android:layout_marginTopBottom="24dp"
         tools:layout_editor_absoluteX="181dp"
         tools:layout_editor_absoluteY="293dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hi this is Ashley and i am editing the document " />
 </LinearLayout>
