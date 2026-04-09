@@ -12,6 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PROG7313_POE">
         <activity
+            android:name=".Transactions"
+            android:exported="false" />
+        <activity
+            android:name=".Categories"
+            android:exported="false" />
+        <activity
+            android:name=".Register"
+            android:exported="false" />
+        <activity
+            android:name=".LoginPage"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
