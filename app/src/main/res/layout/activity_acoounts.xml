@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/custom_blue">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pocket Protector"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:layout_gravity="center" />
+
+            <!-- Net Assets Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:gravity="center"
+                    android:background="@color/white">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Net Assets"
+                        android:textSize="14sp"
+                        android:textColor="@color/secondary_text"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/netAssetsAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R 4,000"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/custom_blue" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Income and Expense Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginBottom="24dp">
+
+                <!-- Income Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center"
+                        android:background="@color/white">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Income"
+                            android:textSize="12sp"
+                            android:textColor="@color/secondary_text" />
+
+                        <TextView
+                            android:id="@+id/incomeAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="R 123"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/income_green"
+                            android:layout_marginTop="4dp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Expense Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:gravity="center"
+                        android:background="@color/white">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Expense"
+                            android:textSize="12sp"
+                            android:textColor="@color/secondary_text" />
+
+                        <TextView
+                            android:id="@+id/expenseAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="R 456"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/expense_red"
+                            android:layout_marginTop="4dp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- Account List Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Account List"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Account List RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/accountsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Add Account Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addAccountButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="+ Add New Account"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/white"
+                app:strokeWidth="2dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginBottom="16dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconTint="@color/custom_blue"
+        app:itemTextColor="@color/custom_blue"
+        app:itemBackground="@color/white"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

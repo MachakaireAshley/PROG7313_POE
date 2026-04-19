@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.PocketProtector" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/custom_blue</item>
+        <item name="colorPrimaryVariant">@color/custom_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:statusBarColor">@color/custom_blue</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="CustomCalendarView" parent="Widget.AppCompat.CalendarView">
+        <item name="android:dateTextAppearance">@style/CalendarDateText</item>
+        <item name="android:weekDayTextAppearance">@style/CalendarWeekDayText</item>
+    </style>
+
+    <style name="CalendarDateText">
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CalendarWeekDayText">
+        <item name="android:textColor">@color/custom_blue</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="BottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">12sp</item>
+        <item name="itemTextAppearanceActive">@style/BottomNavigationTextActive</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavigationTextInactive</item>
+    </style>
+
+    <style name="BottomNavigationTextActive">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/custom_blue</item>
+    </style>
+
+    <style name="BottomNavigationTextInactive">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/custom_blue</item>
+        <item name="android:alpha">0.7</item>
+    </style>
+</resources>

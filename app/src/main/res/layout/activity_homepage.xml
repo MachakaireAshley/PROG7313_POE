@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/custom_blue">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pocket Protector"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- March 2026 Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="March 2026"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Income"
+                                android:textSize="14sp"
+                                android:textColor="@color/custom_blue"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/incomeAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="123"
+                                android:textSize="20sp"
+                                android:textColor="@color/custom_blue"
+                                android:textStyle="bold"
+                                android:layout_marginTop="4dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Expense"
+                                android:textSize="14sp"
+                                android:textColor="@color/expense_red"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/expenseAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="456"
+                                android:textSize="20sp"
+                                android:textColor="@color/expense_red"
+                                android:textStyle="bold"
+                                android:layout_marginTop="4dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total"
+                                android:textSize="14sp"
+                                android:textColor="@color/custom_blue"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/totalAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-333"
+                                android:textSize="20sp"
+                                android:textColor="@color/expense_red"
+                                android:textStyle="bold"
+                                android:layout_marginTop="4dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Budgets Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Budgets"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@color/white">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Monthly"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/custom_blue"
+                        android:layout_marginBottom="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/budgetPercentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="9%"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/custom_blue" />
+
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/budgetProgress"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:progress="9"
+                        android:max="100"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:progressTint="@color/custom_blue"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Expense"
+                                android:textSize="12sp"
+                                android:textColor="@color/secondary_text" />
+
+                            <TextView
+                                android:id="@+id/budgetExpense"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="456"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/expense_red" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Left"
+                                android:textSize="12sp"
+                                android:textColor="@color/secondary_text" />
+
+                            <TextView
+                                android:id="@+id/budgetLeft"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4544"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/custom_blue" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Transactions Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recent Transactions"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="12dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/transactionsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconTint="@color/custom_blue"
+        app:itemTextColor="@color/custom_blue"
+        app:itemBackground="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
