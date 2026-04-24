@@ -191,6 +191,7 @@
         app:itemIconTint="@color/custom_blue"
         app:itemTextColor="@color/custom_blue"
         app:itemBackground="@color/white"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

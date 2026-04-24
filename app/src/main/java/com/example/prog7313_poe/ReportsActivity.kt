@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,6 +28,8 @@ class ReportsActivity : AppCompatActivity() {
     private lateinit var categoriesRecyclerView: RecyclerView
     private lateinit var monthSelectorCard: MaterialCardView
     private lateinit var categoryFilterCard: MaterialCardView
+    private lateinit var legendContainer: LinearLayout
+    private lateinit var pieChartView: View
 
     private var currentMonth = Calendar.getInstance()
     private var currentFilter = "EXP. By Category"
@@ -77,6 +82,8 @@ class ReportsActivity : AppCompatActivity() {
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView)
         monthSelectorCard = findViewById(R.id.monthSelectorCard)
         categoryFilterCard = findViewById(R.id.categoryFilterCard)
+        legendContainer = findViewById(R.id.legendContainer)
+        pieChartView = findViewById(R.id.pieChartView)
     }
 
     private fun setupBottomNavigation() {
@@ -194,6 +201,7 @@ class ReportsActivity : AppCompatActivity() {
         }.sortedByDescending { it.amount }
 
         setupRecyclerView(reports)
+        updateLegend(reports)
     }
 
     private fun loadIncomeByCategory() {
@@ -220,6 +228,7 @@ class ReportsActivity : AppCompatActivity() {
         }.sortedByDescending { it.amount }
 
         setupRecyclerView(reports)
+        updateLegend(reports)
     }
 
     private fun loadMonthlySummary() {
@@ -244,6 +253,7 @@ class ReportsActivity : AppCompatActivity() {
 
         totalExpenses.text = String.format("%.0f", expenseTotal)
         setupRecyclerView(reports)
+        legendContainer.visibility = View.GONE // Hide legend for monthly summary
     }
 
     private fun loadYearlySummary() {
@@ -280,6 +290,86 @@ class ReportsActivity : AppCompatActivity() {
         }.sortedByDescending { it.amount }
 
         setupRecyclerView(reports)
+        updateLegend(reports)
+    }
+
+    private fun updateLegend(reports: List<CategoryReport>) {
+        if (reports.isEmpty()) {
+            legendContainer.visibility = View.GONE
+            return
+        }
+
+        legendContainer.visibility = View.VISIBLE
+        legendContainer.removeAllViews()
+
+        // Get chart colors from resources
+        val chartColors = listOf(
+            R.color.chart_1, R.color.chart_2, R.color.chart_3, R.color.chart_4, R.color.chart_5,
+            R.color.chart_6, R.color.chart_7, R.color.chart_8, R.color.chart_9, R.color.chart_10
+        )
+
+        // Create a horizontal scrollable legend or wrap in LinearLayout
+        val legendRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            isHorizontalScrollBarEnabled = true
+        }
+
+        reports.forEachIndexed { index, report ->
+            val colorRes = chartColors[index % chartColors.size]
+            val color = ContextCompat.getColor(this, colorRes)
+
+            val legendItem = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(8, 0, 8, 0)
+                }
+            }
+
+            val colorView = View(this).apply {
+                layoutParams = LinearLayout.LayoutParams(16, 16).apply {
+                    setMargins(0, 0, 8, 0)
+                }
+                setBackgroundColor(color)
+            }
+
+            val categoryName = TextView(this).apply {
+                text = "${report.name} (${String.format("%.1f", report.percentage)}%)"
+                textSize = 12f
+                setTextColor(ContextCompat.getColor(this@ReportsActivity, R.color.primary_text))
+            }
+
+            legendItem.addView(colorView)
+            legendItem.addView(categoryName)
+            legendRow.addView(legendItem)
+        }
+
+        legendContainer.addView(legendRow)
+
+        // Update pie chart color (if using a custom view, you'd update it here)
+        // For now, we'll just set a background tint or leave as is
+        updatePieChart(reports, chartColors)
+    }
+
+    private fun updatePieChart(reports: List<CategoryReport>, chartColors: List<Int>) {
+        // If you're using a real pie chart library, update it here
+        // This is a placeholder for pie chart visualization
+        if (reports.isNotEmpty()) {
+            // Example: Create a simple colored circle or update a custom view
+            // For now, we'll just make the pie chart view visible
+            pieChartView.visibility = View.VISIBLE
+
+            // If you have a custom PieChartView, you would do something like:
+            // (pieChartView as PieChartView).setData(reports, chartColors)
+        } else {
+            pieChartView.visibility = View.GONE
+        }
     }
 
     private fun setupRecyclerView(reports: List<CategoryReport>) {
@@ -317,20 +407,35 @@ class ReportsActivity : AppCompatActivity() {
                 categoryNumber.text = index.toString()
                 categoryName.text = category.name
 
+                // Get chart colors for category indicators
+                val chartColors = listOf(
+                    R.color.chart_1, R.color.chart_2, R.color.chart_3, R.color.chart_4, R.color.chart_5,
+                    R.color.chart_6, R.color.chart_7, R.color.chart_8, R.color.chart_9, R.color.chart_10
+                )
+
+                val colorRes = chartColors[(index - 1) % chartColors.size]
+                val color = ContextCompat.getColor(itemView.context, colorRes)
+
+                // Add a colored dot next to category name
+                categoryName.setCompoundDrawablesWithIntrinsicBounds(
+                    createColoredDot(color), null, null, null
+                )
+                categoryName.compoundDrawablePadding = 8
+
                 if (currentFilter == "Monthly Summary") {
                     when (category.name) {
                         "Income" -> {
-                            categoryAmount.setTextColor(Color.parseColor("#43A047"))
+                            categoryAmount.setTextColor(ContextCompat.getColor(itemView.context, R.color.income_green))
                             categoryAmount.text = String.format("R %.2f", category.amount)
                             categoryRatio.text = ""
                         }
                         "Expense" -> {
-                            categoryAmount.setTextColor(Color.parseColor("#E53935"))
+                            categoryAmount.setTextColor(ContextCompat.getColor(itemView.context, R.color.expense_red))
                             categoryAmount.text = String.format("R %.2f", category.amount)
                             categoryRatio.text = ""
                         }
                         "Net" -> {
-                            categoryAmount.setTextColor(Color.parseColor("#759ED3"))
+                            categoryAmount.setTextColor(ContextCompat.getColor(itemView.context, R.color.custom_blue))
                             categoryAmount.text = String.format("R %.2f", category.amount)
                             categoryRatio.text = ""
                         }
@@ -338,6 +443,9 @@ class ReportsActivity : AppCompatActivity() {
                 } else {
                     categoryAmount.text = String.format("R %.0f", category.amount)
                     categoryRatio.text = String.format("%.1f%%", category.percentage)
+
+                    // Color the ratio text with chart color
+                    categoryRatio.setTextColor(color)
                 }
 
                 itemView.setOnClickListener {
@@ -347,6 +455,14 @@ class ReportsActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+            }
+
+            private fun createColoredDot(color: Int): android.graphics.drawable.Drawable {
+                val dot = android.graphics.drawable.GradientDrawable()
+                dot.shape = android.graphics.drawable.GradientDrawable.OVAL
+                dot.setSize(12, 12)
+                dot.setColor(color)
+                return dot
             }
         }
     }

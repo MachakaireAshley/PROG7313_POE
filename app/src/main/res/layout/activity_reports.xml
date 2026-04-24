@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/custom_blue">
@@ -14,6 +15,7 @@
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView">
 
         <LinearLayout
+            android:id="@+id/mainContentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -21,6 +23,7 @@
 
             <!-- Header -->
             <TextView
+                android:id="@+id/headerText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Pocket Protector"
@@ -41,6 +44,7 @@
 
                 <!-- Month/Year Selector -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/monthSelectorCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -48,10 +52,10 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:id="@+id/monthSelectorCard">
+                    android:focusable="true">
 
                     <LinearLayout
+                        android:id="@+id/monthSelectorLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -71,6 +75,7 @@
                             android:gravity="center" />
 
                         <ImageView
+                            android:id="@+id/monthDropdownIcon"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_dropdown"
@@ -82,6 +87,7 @@
 
                 <!-- Category Filter -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/categoryFilterCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -89,10 +95,10 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp"
                     android:clickable="true"
-                    android:focusable="true"
-                    android:id="@+id/categoryFilterCard">
+                    android:focusable="true">
 
                     <LinearLayout
+                        android:id="@+id/categoryFilterLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -112,6 +118,7 @@
                             android:gravity="center" />
 
                         <ImageView
+                            android:id="@+id/categoryFilterDropdownIcon"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_dropdown"
@@ -125,6 +132,7 @@
 
             <!-- Pie Chart Section -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/pieChartCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
@@ -132,13 +140,14 @@
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
+                    android:id="@+id/pieChartLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="20dp"
                     android:background="@color/white">
 
-                    <!-- Pie Chart Placeholder -->
+                    <!-- Pie Chart Placeholder - This can be replaced with actual chart library view -->
                     <View
                         android:id="@+id/pieChartView"
                         android:layout_width="200dp"
@@ -146,50 +155,16 @@
                         android:layout_gravity="center"
                         android:background="@drawable/pie_chart_sample" />
 
-                    <!-- Legend -->
+                    <!-- Legend Container - Will be dynamically populated from Kotlin -->
                     <LinearLayout
+                        android:id="@+id/legendContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:gravity="center"
                         android:layout_marginTop="16dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginEnd="16dp">
-
-                            <View
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:background="@color/chart_groceries"
-                                android:layout_marginEnd="4dp" />
-
-                            <TextView
-                                android:text="Groceries"
-                                android:textSize="12sp"
-                                android:textColor="@color/primary_text" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <View
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:background="@color/chart_food"
-                                android:layout_marginEnd="4dp" />
-
-                            <TextView
-                                android:text="Food"
-                                android:textSize="12sp"
-                                android:textColor="@color/primary_text" />
-
-                        </LinearLayout>
+                        <!-- Legend items will be added dynamically in Kotlin -->
 
                     </LinearLayout>
 
@@ -199,6 +174,7 @@
 
             <!-- Category Details Section -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/categoryDetailsCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
@@ -206,6 +182,7 @@
                 android:layout_marginBottom="16dp">
 
                 <LinearLayout
+                    android:id="@+id/categoryDetailsLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -214,6 +191,7 @@
 
                     <!-- Total Expenses -->
                     <LinearLayout
+                        android:id="@+id/totalExpensesLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -221,6 +199,7 @@
                         android:layout_marginBottom="16dp">
 
                         <TextView
+                            android:id="@+id/totalLabel"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -233,7 +212,7 @@
                             android:id="@+id/totalExpenses"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="456"
+                            android:text="0"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             android:textColor="@color/expense_red" />
@@ -242,6 +221,7 @@
 
                     <!-- Table Header -->
                     <LinearLayout
+                        android:id="@+id/tableHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -250,6 +230,7 @@
                         android:layout_marginBottom="8dp">
 
                         <TextView
+                            android:id="@+id/headerNumber"
                             android:layout_width="48dp"
                             android:layout_height="wrap_content"
                             android:text="#"
@@ -258,6 +239,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/headerCategory"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -267,6 +249,7 @@
                             android:textSize="12sp" />
 
                         <TextView
+                            android:id="@+id/headerAmount"
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
                             android:text="Amount"
@@ -276,6 +259,7 @@
                             android:gravity="end" />
 
                         <TextView
+                            android:id="@+id/headerRatio"
                             android:layout_width="60dp"
                             android:layout_height="wrap_content"
                             android:text="Ratio"
@@ -290,7 +274,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/categoriesRecyclerView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
 
                 </LinearLayout>
 
