@@ -88,9 +88,9 @@ class AccountsActivity : AppCompatActivity() {
     private fun loadSampleAccounts() {
         accountsList.addAll(
             listOf(
-                Account(1, "Bank", 2500.00, "ZAR", R.drawable.ic_bank),
-                Account(2, "Cash", 500.00, "ZAR", R.drawable.ic_cash),
-                Account(3, "Credit Card", -1000.00, "USD", R.drawable.ic_credit_card)
+                Account(1, "Bank", 2500.00, "ZAR", R.drawable.ic_account_bank),
+                Account(2, "Cash", 500.00, "ZAR", R.drawable.ic_account_cash),
+                Account(3, "Credit Card", -1000.00, "USD", R.drawable.ic_account_credit_card)
             )
         )
     }

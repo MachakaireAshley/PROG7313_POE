@@ -104,7 +104,7 @@
         android:gravity="center_horizontal">
 
         <!-- Login Button -->
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -120,7 +120,7 @@
             app:backgroundTint="@color/custom_blue" />
 
         <!-- Register Button -->
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="56dp"

@@ -1,19 +1,14 @@
 package com.example.prog7313_poe
 
-import android.app.DatePickerDialog
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
@@ -219,7 +214,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showAddRecurringItemDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_recurring_item, null)
+        val dialogView = layoutInflater.inflate(R.layout.activity_recurring_item, null)
         val nameInput = dialogView.findViewById<TextInputEditText>(R.id.itemNameInput)
         val amountInput = dialogView.findViewById<TextInputEditText>(R.id.amountInput)
         val categoryInput = dialogView.findViewById<TextInputEditText>(R.id.categoryInput)
@@ -258,7 +253,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showEditRecurringItemDialog(item: RecurringItem, position: Int) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_recurring_item, null)
+        val dialogView = layoutInflater.inflate(R.layout.activity_recurring_item, null)
         val nameInput = dialogView.findViewById<TextInputEditText>(R.id.itemNameInput)
         val amountInput = dialogView.findViewById<TextInputEditText>(R.id.amountInput)
         val categoryInput = dialogView.findViewById<TextInputEditText>(R.id.categoryInput)
@@ -322,7 +317,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showAddBudgetDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_budget, null)
+        val dialogView = layoutInflater.inflate(R.layout.activity_budget, null)
         val categoryInput = dialogView.findViewById<TextInputEditText>(R.id.categoryInput)
         val amountInput = dialogView.findViewById<TextInputEditText>(R.id.budgetAmountInput)
 
@@ -350,7 +345,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showEditBudgetDialog(budget: Budget, position: Int) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_budget, null)
+        val dialogView = layoutInflater.inflate(R.layout.activity_budget, null)
         val categoryInput = dialogView.findViewById<TextInputEditText>(R.id.categoryInput)
         val amountInput = dialogView.findViewById<TextInputEditText>(R.id.budgetAmountInput)
 

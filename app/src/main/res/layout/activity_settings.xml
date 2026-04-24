@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -60,8 +61,8 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_recurring"
-                            android:tint="@color/custom_blue" />
+                            android:src="@drawable/ic_setting_recurring"
+                            app:tint="@color/custom_blue" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -72,11 +73,13 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <ImageView
+                        <ImageButton
+                            android:id="@+id/RightArrowButton1"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:tint="@color/secondary_text" />
+                            android:src="@drawable/ic_setting_rightarrow"
+                            app:tint="@color/secondary_text" />
+
 
                     </LinearLayout>
 
@@ -101,8 +104,8 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_budget"
-                            android:tint="@color/custom_blue" />
+                            android:src="@drawable/ic_setting_budget"
+                            app:tint="@color/custom_blue" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -113,11 +116,13 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <ImageView
+                        <ImageButton
+                            android:id="@+id/RightArrowButton2"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:tint="@color/secondary_text" />
+                            android:src="@drawable/ic_setting_rightarrow"
+                            app:tint="@color/secondary_text" />
+
 
                     </LinearLayout>
 
@@ -142,8 +147,8 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_categories"
-                            android:tint="@color/custom_blue" />
+                            android:src="@drawable/ic_setting_categories"
+                            app:tint="@color/custom_blue" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -154,11 +159,13 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <ImageView
+                        <ImageButton
+                            android:id="@+id/RightArrowButton3"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:tint="@color/secondary_text" />
+                            android:src="@drawable/ic_setting_rightarrow"
+                            app:tint="@color/secondary_text" />
+
 
                     </LinearLayout>
 
@@ -183,8 +190,8 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_members"
-                            android:tint="@color/custom_blue" />
+                            android:src="@drawable/ic_setting_members"
+                            app:tint="@color/custom_blue" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -195,11 +202,13 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <ImageView
+                        <ImageButton
+                            android:id="@+id/RightArrowButton4"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:tint="@color/secondary_text" />
+                            android:src="@drawable/ic_setting_rightarrow"
+                            app:tint="@color/secondary_text" />
+
 
                     </LinearLayout>
 
@@ -225,7 +234,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_theme"
-                            android:tint="@color/custom_blue" />
+                            app:tint="@color/custom_blue" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -245,11 +254,13 @@
                             android:textColor="@color/secondary_text"
                             android:layout_marginEnd="8dp" />
 
-                        <ImageView
+                        <ImageButton
+                            android:id="@+id/RightArrowButton5"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:tint="@color/secondary_text" />
+                            android:src="@drawable/ic_setting_rightarrow"
+                            app:tint="@color/secondary_text" />
+
 
                     </LinearLayout>
 
@@ -274,8 +285,8 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_pin_lock"
-                            android:tint="@color/custom_blue" />
+                            android:src="@drawable/ic_setting_pin_lock"
+                            app:tint="@color/custom_blue" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -286,11 +297,13 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/pinLockSwitch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="false" />
+                        <ImageButton
+                            android:id="@+id/RightArrowButton6"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_setting_rightarrow"
+                            app:tint="@color/secondary_text" />
+
 
                     </LinearLayout>
 
@@ -315,8 +328,8 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_export"
-                            android:tint="@color/custom_blue" />
+                            android:src="@drawable/ic_setting_export"
+                            app:tint="@color/custom_blue" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -327,11 +340,12 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <ImageView
+                        <ImageButton
+                            android:id="@+id/RightArrowButton7"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:tint="@color/secondary_text" />
+                            android:src="@drawable/ic_setting_rightarrow"
+                            app:tint="@color/secondary_text" />
 
                     </LinearLayout>
 

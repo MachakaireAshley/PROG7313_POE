@@ -6,7 +6,7 @@
     android:background="@color/custom_blue">
 
     <!-- Cancel Button - Top Right -->
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/cancelButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -56,7 +56,7 @@
             android:gravity="center"
             android:layout_marginBottom="24dp">
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/expenseButton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
@@ -68,7 +68,7 @@
                 app:backgroundTint="@color/expense_red"
                 android:layout_marginEnd="4dp" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/incomeButton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
@@ -80,7 +80,7 @@
                 app:backgroundTint="@color/income_green"
                 android:layout_marginHorizontal="4dp" />
 
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/transferButton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
@@ -115,7 +115,7 @@
             android:paddingBottom="16dp">
 
             <!-- Date Selector -->
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
@@ -147,16 +147,16 @@
                         android:textColor="@color/custom_blue"
                         android:textStyle="bold" />
 
-                    <ImageView
-                        android:layout_width="24dp"
+                    <ImageButton
+                        android:id="@+id/buttonCalendar"
+                        android:layout_width="wrap_content"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_calendar"
-                        app:tint="@color/custom_blue"
-                        android:layout_marginStart="8dp" />
+                        android:layout_marginStart="8dp"
+                        app:srcCompat="@drawable/ic_home_calendar" />
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
             <!-- Amount Field -->
             <com.google.android.material.textfield.TextInputLayout
@@ -260,15 +260,15 @@
                     android:id="@+id/memberInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords"
-                    android:focusable="false"
                     android:clickable="true"
+                    android:focusable="false"
+                    android:inputType="textCapWords"
                     android:textColor="@color/primary_text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Receipt Photo -->
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="12dp"
@@ -289,7 +289,7 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_camera"
+                        android:src="@drawable/ic_add_camera"
                         app:tint="@color/custom_blue" />
 
                     <TextView
@@ -301,15 +301,15 @@
                         android:textColor="@color/primary_text"
                         android:layout_marginStart="12dp" />
 
-                    <ImageView
+                    <ImageButton
+                        android:id="@+id/attachButton"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_attach"
-                        app:tint="@color/custom_blue" />
+                        app:srcCompat="@drawable/ic_add_attach"/>
 
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
             <!-- Memo Field -->
             <com.google.android.material.textfield.TextInputLayout
@@ -343,7 +343,7 @@
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/saveButton"
             android:layout_width="0dp"
             android:layout_height="56dp"
@@ -355,7 +355,7 @@
             app:backgroundTint="@color/custom_blue"
             android:layout_marginEnd="8dp" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/saveContinueButton"
             android:layout_width="0dp"
             android:layout_height="60dp"
