@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <!-- Header with color bar -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="#6200EE" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Icon and Title -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/detailTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Netflix"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333" />
+
+                <TextView
+                    android:id="@+id/detailAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$15.99/month"
+                    android:textSize="14sp"
+                    android:textColor="#6200EE"
+                    android:layout_marginTop="4dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Details Grid -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:rowCount="4"
+            android:columnCount="2"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Category:"
+                android:textColor="#666666"
+                android:layout_columnWeight="1"
+                android:padding="8dp" />
+
+            <TextView
+                android:id="@+id/detailCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Entertainment"
+                android:textColor="#333333"
+                android:layout_columnWeight="2"
+                android:padding="8dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Frequency:"
+                android:textColor="#666666"
+                android:layout_columnWeight="1"
+                android:padding="8dp" />
+
+            <TextView
+                android:id="@+id/detailFrequency"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Monthly"
+                android:textColor="#333333"
+                android:layout_columnWeight="2"
+                android:padding="8dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Next Payment:"
+                android:textColor="#666666"
+                android:layout_columnWeight="1"
+                android:padding="8dp" />
+
+            <TextView
+                android:id="@+id/detailNextDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Mar 15, 2024"
+                android:textColor="#333333"
+                android:layout_columnWeight="2"
+                android:padding="8dp" />
+
+        </GridLayout>
+
+        <!-- Payment History -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Payment History"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historyRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:nestedScrollingEnabled="false" />
+
+        <Button
+            android:id="@+id/closeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Close"
+            android:textColor="#FAFAFA"
+            android:backgroundTint="@color/custom_blue"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

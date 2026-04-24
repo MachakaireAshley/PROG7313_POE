@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category_names">
+        <item>Food</item>
+        <item>Groceries</item>
+        <item>Transportation</item>
+        <item>Utilities</item>
+        <item>Entertainment</item>
+        <item>Shopping</item>
+        <item>Health</item>
+        <item>Education</item>
+        <item>Insurance</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="frequencies">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Bi-weekly</item>
+        <item>Monthly</item>
+        <item>Quarterly</item>
+        <item>Yearly</item>
+    </string-array>
+</resources>

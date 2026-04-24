@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Main Content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:weightSum="5">
+
+            <!-- Category Icon -->
+
+            <!-- Item Details -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/itemTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Netflix Subscription"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333" />
+
+                <TextView
+                    android:id="@+id/categoryName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Entertainment"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="4dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp">
+
+                    <TextView
+                        android:id="@+id/frequency"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Monthly"
+                        android:textSize="11sp"
+                        android:textColor="#888888"
+                        android:drawableStart="@drawable/ic_repeat"
+                        android:drawablePadding="4dp" />
+
+                    <TextView
+                        android:id="@+id/nextDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Next: Mar 15"
+                        android:textSize="11sp"
+                        android:textColor="#888888"
+                        android:layout_marginStart="12dp"
+                        android:drawableStart="@drawable/ic_calendar"
+                        android:drawablePadding="4dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Amount and Status -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end">
+
+                <TextView
+                    android:id="@+id/amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$15.99"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#6200EE" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:padding="8dp"
+            android:background="#FAFAFA"
+            android:visibility="gone"
+            android:id="@+id/actionButtons">
+
+            <Button
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="Edit"
+                android:textSize="12sp"
+                android:textColor="#666666"
+                android:background="@null" />
+
+            <Button
+                android:id="@+id/pauseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="Pause"
+                android:textSize="12sp"
+                android:textColor="#FF9800"
+                android:background="@null" />
+
+            <Button
+                android:id="@+id/deleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="Delete"
+                android:textSize="12sp"
+                android:textColor="#F44336"
+                android:background="@null" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

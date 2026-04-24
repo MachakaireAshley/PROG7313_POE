@@ -4,15 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="#F8F9FA">
 
     <!-- Header -->
+
+
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/categoryToolbar"
+        android:id="@+id/memberToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#FFFFFF"
-        app:title="Category"
+        app:title="Member"
         app:titleTextColor="#000000"
         app:contentInsetStartWithNavigation="0dp">
 
@@ -23,7 +25,7 @@
             android:gravity="center_vertical">
 
             <ImageButton
-                android:id="@+id/categoryBackButton"
+                android:id="@+id/memberBackButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/ic_back"
@@ -36,7 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Category"
+                android:text="Member"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#000000"
@@ -47,32 +49,28 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-
-
     <Button
-        android:id="@+id/addNewCategoryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/custom_blue"
-        android:drawableStart="@drawable/ic_add"
-        android:drawablePadding="8dp"
-        android:gravity="center"
-        android:text="Add new"
-        android:textColor="#6200EE" />
-
-    <!-- Categories Grid -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/categoriesGrid"
+        android:id="@+id/button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        android:backgroundTint="@color/custom_blue"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/membersRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="535dp"
         android:layout_weight="1"
-        android:padding="8dp"
         android:clipToPadding="false"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="4" />
+        android:padding="8dp" />
 
-    <!-- Add New Category Button -->
-
-
+    <!-- Bottom Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#FFFFFF"
+        android:elevation="8dp"/>
 
 </LinearLayout>
