@@ -23,7 +23,7 @@
             android:gravity="center_vertical">
 
             <ImageButton
-                android:id="@+id/recurringBackButton"
+                android:id="@+id/recurring_item_BackButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/ic_back"
@@ -48,7 +48,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/recurring_item_addButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add"
@@ -62,6 +62,5 @@
         android:padding="8dp"
         android:clipToPadding="false" />
 
-    <!-- FAB to Add New -->
 
 </LinearLayout>

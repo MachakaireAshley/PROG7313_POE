@@ -10,20 +10,23 @@
     android:focusable="true"
     android:background="?attr/selectableItemBackgroundBorderless">
 
+    <!--This xml is formating the item for Category-->
+    <!--(can be Using in both Setting page and Add transaction page)-->
+
     <!-- Category Icon Circle Background -->
     <androidx.cardview.widget.CardView
         android:layout_width="56dp"
         android:layout_height="56dp"
         app:cardCornerRadius="28dp"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="#F5F5F5">
+        app:cardBackgroundColor="@color/custom_blue">
 
         <ImageView
             android:id="@+id/categoryIcon"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="center"
-            app:tint="#6200EE" />
+            app:tint="#FAFAFA" />
 
     </androidx.cardview.widget.CardView>
 

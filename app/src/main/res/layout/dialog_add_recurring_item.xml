@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="#FFFFFF">
 
+    <!--using in Setting page(recurring item) when the recurring_item_addButton be press-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +29,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/itemNameInput"
+                android:id="@+id/recurring_item_nameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Item Name"
@@ -44,7 +45,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/amountInput"
+                android:id="@+id/recurring_item_amountInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Amount"
@@ -63,7 +64,7 @@
             android:hint="Category">
 
             <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/categorySpinner"
+                android:id="@+id/recurring_item_categorySpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/category_names"
@@ -80,7 +81,7 @@
             android:hint="Frequency">
 
             <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/frequencySpinner"
+                android:id="@+id/recurring_item_frequencySpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/frequencies" />
@@ -95,7 +96,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/startDateInput"
+                android:id="@+id/recurring_item_startDateInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Start Date"
@@ -114,7 +115,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/endDateInput"
+                android:id="@+id/recurring_item_endDateInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="End Date (Optional)"
@@ -133,7 +134,7 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/notesInput"
+                android:id="@+id/recurring_item_notesInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Notes (Optional)"
@@ -150,7 +151,7 @@
             android:gravity="end">
 
             <Button
-                android:id="@+id/cancelButton"
+                android:id="@+id/recurring_item_cancelButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
@@ -158,7 +159,7 @@
                 android:backgroundTint="@color/expense_red" />
 
             <Button
-                android:id="@+id/createButton"
+                android:id="@+id/recurring_item_createButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Create"

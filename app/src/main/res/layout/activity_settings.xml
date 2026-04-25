@@ -247,8 +247,12 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
+<<<<<<< Updated upstream
                         <ImageButton
                             android:id="@+id/RightArrowButton5"
+=======
+                        <ImageView
+>>>>>>> Stashed changes
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"

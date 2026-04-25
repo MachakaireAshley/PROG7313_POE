@@ -7,6 +7,8 @@
     android:padding="24dp"
     android:background="@android:color/white">
 
+    <!--using in Setting page(category) when the category_addBotton be press-->
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,20 +26,13 @@
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/categoryNameInput"
+            android:id="@+id/category_nameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Category Name"
             android:inputType="textCapWords" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Budget Limit (Optional) -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"/>
 
     <!-- Icon Selection Label -->
     <TextView
@@ -51,7 +46,7 @@
 
     <!-- Icons Grid -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/iconsRecyclerView"
+        android:id="@+id/category_iconsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:nestedScrollingEnabled="false"
@@ -65,7 +60,7 @@
         android:gravity="end">
 
         <Button
-            android:id="@+id/cancelButton"
+            android:id="@+id/category_cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -73,7 +68,7 @@
             android:backgroundTint="@color/expense_red" />
 
         <Button
-            android:id="@+id/createButton"
+            android:id="@+id/category_createButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

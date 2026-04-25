@@ -50,7 +50,7 @@
 
 
     <Button
-        android:id="@+id/addNewCategoryButton"
+        android:id="@+id/category_addBotton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/custom_blue"
@@ -58,7 +58,7 @@
         android:drawablePadding="8dp"
         android:gravity="center"
         android:text="Add new"
-        android:textColor="#6200EE" />
+        android:textColor="#FAFAFA" />
 
     <!-- Categories Grid -->
     <androidx.recyclerview.widget.RecyclerView

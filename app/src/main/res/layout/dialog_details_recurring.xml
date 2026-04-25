@@ -6,19 +6,19 @@
     android:orientation="vertical"
     android:background="#FFFFFF">
 
-    <!-- Header with color bar -->
+<!--using in Setting page(recurring item) when the recurring_item_detailButton be press-->
+
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:background="#6200EE" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Icon and Title -->
+        <!-- Title -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                 android:layout_gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/detailTitle"
+                    android:id="@+id/recurring_item_detailTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Netflix"
@@ -43,7 +43,7 @@
                     android:textColor="#333333" />
 
                 <TextView
-                    android:id="@+id/detailAmount"
+                    android:id="@+id/recurring_item_detailAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$15.99/month"
@@ -72,7 +72,7 @@
                 android:padding="8dp" />
 
             <TextView
-                android:id="@+id/detailCategory"
+                android:id="@+id/recurring_item_detailCategory"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Entertainment"
@@ -89,7 +89,7 @@
                 android:padding="8dp" />
 
             <TextView
-                android:id="@+id/detailFrequency"
+                android:id="@+id/recurring_item_detailFrequency"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Monthly"
@@ -106,7 +106,7 @@
                 android:padding="8dp" />
 
             <TextView
-                android:id="@+id/detailNextDate"
+                android:id="@+id/recurring_item_detailNextDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Mar 15, 2024"
@@ -115,22 +115,6 @@
                 android:padding="8dp" />
 
         </GridLayout>
-
-        <!-- Payment History -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Payment History"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:layout_marginBottom="12dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/historyRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:nestedScrollingEnabled="false" />
 
         <Button
             android:id="@+id/closeButton"

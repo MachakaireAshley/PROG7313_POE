@@ -5,8 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/custom_blue">
+<!--using in setting page, for set up the pin number-->
 
-    <!-- Toolbar at the very top -->
+    <!--Toolbar for goBack button-->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/pinSetUpToolbar"
         android:layout_width="match_parent"
@@ -68,7 +69,7 @@
                 android:gravity="center"
                 android:layout_marginBottom="18dp">
 
-                <!-- 4 PIN Dots -->
+                <!-- 4 PIN Dots (change to pin_dot_filled when user enter the number) -->
                 <View
                     android:id="@+id/pinDot1"
                     android:layout_width="36dp"
@@ -99,7 +100,7 @@
 
             </LinearLayout>
 
-            <!-- Error Message -->
+            <!-- Error Message (only visible when it need)-->
             <TextView
                 android:id="@+id/errorMessage"
                 android:layout_width="wrap_content"

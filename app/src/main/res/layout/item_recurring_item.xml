@@ -7,13 +7,12 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
     app:cardBackgroundColor="#FFFFFF">
-
+    <!--This xml is formating the item for recurring item-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Main Content -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,9 +20,6 @@
             android:padding="16dp"
             android:weightSum="5">
 
-            <!-- Category Icon -->
-
-            <!-- Item Details -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="3"
@@ -31,8 +27,9 @@
                 android:layout_marginStart="12dp"
                 android:orientation="vertical">
 
+                <!--The text should change to the info of recurring item that user set-->
                 <TextView
-                    android:id="@+id/itemTitle"
+                    android:id="@+id/recurring_itemTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Netflix Subscription"
@@ -41,7 +38,7 @@
                     android:textColor="#333333" />
 
                 <TextView
-                    android:id="@+id/categoryName"
+                    android:id="@+id/recurring_item_categoryName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Entertainment"
@@ -56,7 +53,7 @@
                     android:layout_marginTop="4dp">
 
                     <TextView
-                        android:id="@+id/frequency"
+                        android:id="@+id/recurring_item_frequency"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Monthly"
@@ -66,21 +63,21 @@
                         android:drawablePadding="4dp" />
 
                     <TextView
-                        android:id="@+id/nextDate"
+                        android:id="@+id/recurring_item_nextDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Next: Mar 15"
                         android:textSize="11sp"
                         android:textColor="#888888"
                         android:layout_marginStart="12dp"
-                        android:drawableStart="@drawable/ic_calendar"
+                        android:drawableStart="@drawable/ic_home_calendar"
                         android:drawablePadding="4dp" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- Amount and Status -->
+            <!-- Amount  -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -89,7 +86,7 @@
                 android:gravity="end">
 
                 <TextView
-                    android:id="@+id/amount"
+                    android:id="@+id/recurring_item_amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$15.99"
@@ -109,35 +106,25 @@
             android:gravity="end"
             android:padding="8dp"
             android:background="#FAFAFA"
-            android:visibility="gone"
-            android:id="@+id/actionButtons">
+            android:id="@+id/recurring_item_actionButtons">
 
             <Button
-                android:id="@+id/editButton"
+                android:id="@+id/recurring_item_detailButton"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:text="Edit"
+                android:layout_height="38dp"
+                android:text="Detail"
                 android:textSize="12sp"
-                android:textColor="#666666"
-                android:background="@null" />
+                android:textColor="#FAFAFA"
+                android:backgroundTint="@color/custom_blue" />
 
             <Button
-                android:id="@+id/pauseButton"
+                android:id="@+id/recurring_item_deleteButton"
                 android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:text="Pause"
-                android:textSize="12sp"
-                android:textColor="#FF9800"
-                android:background="@null" />
-
-            <Button
-                android:id="@+id/deleteButton"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
+                android:layout_height="38dp"
                 android:text="Delete"
                 android:textSize="12sp"
-                android:textColor="#F44336"
-                android:background="@null" />
+                android:textColor="#FAFAFA"
+                android:backgroundTint="#E53935" />
 
         </LinearLayout>
 
