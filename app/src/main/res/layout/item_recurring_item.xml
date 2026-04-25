@@ -7,7 +7,8 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
     app:cardBackgroundColor="#FFFFFF">
-    <!--This xml is formating the item for recurring item-->
+
+    <!--This 'item' xml is the format for each recurring item-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +28,7 @@
                 android:layout_marginStart="12dp"
                 android:orientation="vertical">
 
-                <!--The text should change to the info of recurring item that user set-->
+                <!--The text should change to the info of recurring item that the user sets -->
                 <TextView
                     android:id="@+id/recurring_itemTitle"
                     android:layout_width="wrap_content"

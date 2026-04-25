@@ -7,7 +7,7 @@
     android:padding="24dp"
     android:background="@android:color/white">
 
-    <!--using in Setting page(category) when the category_addBotton be press-->
+    <!--use in Setting page(category) when the category_addBotton is pressed-->
 
     <TextView
         android:layout_width="wrap_content"

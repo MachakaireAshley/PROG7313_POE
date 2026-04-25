@@ -7,8 +7,9 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="2dp"
     app:cardBackgroundColor="#FFFFFF">
-    <!--This xml is formating the item for Member-->
-<!--(can be Using in both Setting page and Add transaction page)-->
+
+    <!--This 'item' xml is the format for each Member-->
+<!--(can be used in both Setting page and Add transaction page)-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +17,7 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
-        <!-- Member Info (Should be instead to the member that set by user)-->
+        <!-- Member Info (Will be the actual member with the info that the user sets up with)-->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"

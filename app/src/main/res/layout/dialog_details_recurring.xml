@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="#FFFFFF">
 
-<!--using in Setting page(recurring item) when the recurring_item_detailButton be press-->
+<!--use in Setting page(recurring item) when the recurring_item_detailButton is pressed-->
 
     <View
         android:layout_width="match_parent"
