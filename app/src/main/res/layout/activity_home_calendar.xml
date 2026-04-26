@@ -33,13 +33,47 @@
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="center" />
 
-            <!-- Month Selector -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/home_calendar_buttonContainer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginBottom="16dp"/>
+                android:background="@drawable/rounded_background"
+                android:elevation="4dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp">
+
+                <!-- link to activity_home_list.xml -->
+                <ImageButton
+                    android:id="@+id/home_calendar_listButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:backgroundTint="#FAFAFA"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_home_list"
+                    android:tooltipText="List View"
+                    android:contentDescription="List View"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/custom_blue" />
+
+                <!-- link to activity_home_calendar.xml(this page)-->
+                <ImageButton
+                    android:id="@+id/home_calendar_calendarButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:backgroundTint="#FAFAFA"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_home_calendar"
+                    android:tooltipText="Calendar View"
+                    android:contentDescription="Calendar View"/>
+
+            </LinearLayout>
+
 
             <!-- Summary Cards -->
             <LinearLayout
@@ -165,20 +199,10 @@
 
             </LinearLayout>
 
-            <!-- Calendar -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                android:layout_marginBottom="24dp"/>
-
             <CalendarView
-                android:id="@+id/calendarView2"
+                android:id="@+id/calendarView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/CustomCalendarView"
-                android:theme="@style/CustomCalendarView" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

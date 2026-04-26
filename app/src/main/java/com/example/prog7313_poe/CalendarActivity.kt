@@ -6,9 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 class CalendarActivity : AppCompatActivity() {
 
@@ -29,7 +27,7 @@ class CalendarActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_calendar)
+        setContentView(R.layout.activity_home_calendar)
 
         initializeViews()
         setupBottomNavigation()
