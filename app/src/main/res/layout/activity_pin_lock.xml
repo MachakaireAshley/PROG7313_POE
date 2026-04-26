@@ -226,13 +226,14 @@
         android:id="@+id/forgotPinText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot PIN?"
-        android:textSize="14sp"
-        android:textColor="#333333"
-        android:padding="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
-        android:background="?attr/selectableItemBackgroundBorderless" />
+        android:minHeight="48dp"
+        android:padding="8dp"
+        android:text="Forgot PIN?"
+        android:textColor="#333333"
+        android:textSize="14sp" />
 
     <!-- Attempts Remaining (Shows after failed attempts) -->
     <TextView

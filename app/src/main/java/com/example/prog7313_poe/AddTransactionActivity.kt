@@ -2,11 +2,13 @@ package com.example.prog7313_poe
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import java.util.Calendar
 
@@ -19,11 +21,18 @@ class AddTransactionActivity : AppCompatActivity() {
     private lateinit var dateText: TextView
     private lateinit var calendarButton: ImageButton
     private lateinit var amountInput: TextInputEditText
-    private lateinit var categoryCard: android.view.View
-    private lateinit var accountCard: android.view.View
-    private lateinit var memberCard: android.view.View
+    private lateinit var categoryCard: View
+    private lateinit var accountCard: View
+    private lateinit var memberCard: View
     private lateinit var saveButton: Button
     private lateinit var saveContinueButton: Button
+
+    private lateinit var receiptPhotoCard: View
+    private lateinit var attachButton: ImageButton
+    private lateinit var memoInput: TextInputEditText
+    private lateinit var categoryArrowButton: ImageButton
+    private lateinit var accountArrowButton: ImageButton
+    private lateinit var memberArrowButton: ImageButton
 
     private var selectedType = "expense"
     private var selectedDate = Calendar.getInstance()
@@ -35,6 +44,7 @@ class AddTransactionActivity : AppCompatActivity() {
         initViews()
         setupClickListeners()
         setupDatePicker()
+        updateTypeButtonStyles()
     }
 
     private fun initViews() {
@@ -50,12 +60,17 @@ class AddTransactionActivity : AppCompatActivity() {
         memberCard = findViewById(R.id.choose_memberCard)
         saveButton = findViewById(R.id.saveButton)
         saveContinueButton = findViewById(R.id.saveContinueButton)
+
+        receiptPhotoCard = findViewById(R.id.receiptPhotoCard)
+        attachButton = findViewById(R.id.add_attachButton)
+        memoInput = findViewById(R.id.add_memoInput)
+        categoryArrowButton = findViewById(R.id.add_categoryButton)
+        accountArrowButton = findViewById(R.id.add_select_accountButton)
+        memberArrowButton = findViewById(R.id.add_choose_memberCardButton)
     }
 
     private fun setupClickListeners() {
-        cancelButton.setOnClickListener {
-            finish()
-        }
+        cancelButton.setOnClickListener { finish() }
 
         expenseButton.setOnClickListener {
             selectedType = "expense"
@@ -72,40 +87,56 @@ class AddTransactionActivity : AppCompatActivity() {
             updateTypeButtonStyles()
         }
 
-        categoryCard.setOnClickListener {
-            Toast.makeText(this, "Select category", Toast.LENGTH_SHORT).show()
-        }
+        // Category selection (card + arrow)
+        categoryCard.setOnClickListener { showCategoryPicker() }
+        categoryArrowButton.setOnClickListener { showCategoryPicker() }
 
-        accountCard.setOnClickListener {
-            Toast.makeText(this, "Select account", Toast.LENGTH_SHORT).show()
-        }
+        // Account selection
+        accountCard.setOnClickListener { showAccountPicker() }
+        accountArrowButton.setOnClickListener { showAccountPicker() }
 
-        memberCard.setOnClickListener {
-            Toast.makeText(this, "Select member", Toast.LENGTH_SHORT).show()
-        }
+        // Member selection
+        memberCard.setOnClickListener { showMemberPicker() }
+        memberArrowButton.setOnClickListener { showMemberPicker() }
 
-        saveButton.setOnClickListener {
-            saveTransaction()
-        }
+        // Receipt photo
+        receiptPhotoCard.setOnClickListener { showPhotoPicker() }
+        attachButton.setOnClickListener { showPhotoPicker() }
 
-        saveContinueButton.setOnClickListener {
-            saveTransaction()
-            clearForm()
-        }
+        saveButton.setOnClickListener { saveTransaction(shouldFinish = true) }
+        saveContinueButton.setOnClickListener { saveTransaction(shouldFinish = false) }
     }
 
     private fun updateTypeButtonStyles() {
-        // Simple styling - can be enhanced
-        expenseButton.isSelected = selectedType == "expense"
-        incomeButton.isSelected = selectedType == "income"
-        transferButton.isSelected = selectedType == "transfer"
+        // Background tints - using resource IDs
+        val expenseColorRes = R.color.expense_red
+        val incomeColorRes = R.color.income_green
+        val transferColorRes = R.color.custom_blue
+        val transparentRes = android.R.color.transparent
+
+        expenseButton.backgroundTintList = ContextCompat.getColorStateList(
+            this, if (selectedType == "expense") expenseColorRes else transparentRes
+        )
+        incomeButton.backgroundTintList = ContextCompat.getColorStateList(
+            this, if (selectedType == "income") incomeColorRes else transparentRes
+        )
+        transferButton.backgroundTintList = ContextCompat.getColorStateList(
+            this, if (selectedType == "transfer") transferColorRes else transparentRes
+        )
+
+        // Text colors - using color integers for simplicity
+        val white = ContextCompat.getColor(this, android.R.color.white)
+        val darkText = ContextCompat.getColor(this, android.R.color.black) // fallback, but white is fine
+
+        expenseButton.setTextColor(if (selectedType == "expense") white else white)
+        incomeButton.setTextColor(if (selectedType == "income") white else white)
+        transferButton.setTextColor(if (selectedType == "transfer") white else white)
     }
 
     private fun setupDatePicker() {
         updateDateText()
-
         calendarButton.setOnClickListener {
-            val datePicker = DatePickerDialog(
+            DatePickerDialog(
                 this,
                 { _, year, month, dayOfMonth ->
                     selectedDate.set(year, month, dayOfMonth)
@@ -114,8 +145,7 @@ class AddTransactionActivity : AppCompatActivity() {
                 selectedDate.get(Calendar.YEAR),
                 selectedDate.get(Calendar.MONTH),
                 selectedDate.get(Calendar.DAY_OF_MONTH)
-            )
-            datePicker.show()
+            ).show()
         }
     }
 
@@ -124,19 +154,45 @@ class AddTransactionActivity : AppCompatActivity() {
         dateText.text = dateFormat.format(selectedDate.time)
     }
 
-    private fun saveTransaction() {
+    private fun saveTransaction(shouldFinish: Boolean) {
         val amount = amountInput.text.toString()
-
         if (amount.isEmpty()) {
             amountInput.error = "Please enter amount"
             return
         }
 
+        // Placeholder: future database insertion
         Toast.makeText(this, "Transaction saved: $selectedType - $amount", Toast.LENGTH_SHORT).show()
-        finish()
+
+        if (shouldFinish) {
+            finish()
+        } else {
+            clearForm()
+        }
     }
 
     private fun clearForm() {
         amountInput.text?.clear()
+        memoInput.text?.clear()
+        selectedType = "expense"
+        updateTypeButtonStyles()
+        selectedDate = Calendar.getInstance()
+        updateDateText()
+    }
+
+    private fun showCategoryPicker() {
+        Toast.makeText(this, "Select category (to be connected to database)", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showAccountPicker() {
+        Toast.makeText(this, "Select account (to be connected to database)", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showMemberPicker() {
+        Toast.makeText(this, "Select member (to be connected to database)", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showPhotoPicker() {
+        Toast.makeText(this, "Attach receipt photo (feature coming soon)", Toast.LENGTH_SHORT).show()
     }
 }
