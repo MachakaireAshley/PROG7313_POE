@@ -5,12 +5,43 @@
     android:layout_height="match_parent"
     android:background="@color/custom_blue">
 
+    <!-- Sticky Title Bar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="4dp"
+        app:titleTextColor="@color/custom_blue"
+        app:title="@string/app_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_gravity="start">
+
+            <ImageView
+                android:id="@+id/logoIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_logo"
+                android:contentDescription="App Logo" />
+
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleBar"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView">
 
         <LinearLayout
@@ -19,16 +50,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Header -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pocket Protector"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp" />
 
             <LinearLayout
                 android:id="@+id/home_calendar_buttonContainer"
