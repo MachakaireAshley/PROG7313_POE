@@ -15,7 +15,7 @@
             android:name=".Categories"
             android:exported="false" />
         <activity
-            android:name=".Transactions"
+            android:name=".Transaction"
             android:exported="false" />
         <activity
             android:name=".Register"

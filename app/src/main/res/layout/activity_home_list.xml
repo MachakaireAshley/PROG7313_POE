@@ -331,7 +331,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Transactions Section -->
+            <!-- Transaction Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
