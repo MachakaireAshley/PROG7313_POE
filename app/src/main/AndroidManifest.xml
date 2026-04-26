@@ -21,7 +21,7 @@
             android:name=".Register"
             android:exported="false" />
         <activity
-            android:name=".LoginPage"
+            android:name=".LoginPageActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

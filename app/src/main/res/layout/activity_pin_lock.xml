@@ -192,17 +192,10 @@
 
         <!-- Row 4 -->
 
-        <Button
-            android:id="@+id/btnBiometric"
+        <Space
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:text=" "
-            android:textSize="28sp"
-            android:textColor="#6200EE"
-            android:background="@drawable/pin_button"
-            android:layout_margin="8dp"
-            style="?attr/borderlessButtonStyle"
-             />
+            android:layout_margin="8dp" />
         <Button
             android:id="@+id/btn0"
             android:layout_width="64dp"

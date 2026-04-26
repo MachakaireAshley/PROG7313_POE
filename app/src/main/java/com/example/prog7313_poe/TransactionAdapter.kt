@@ -1,62 +1,38 @@
 package com.example.prog7313_poe
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import java.text.DecimalFormat
 
-class TransactionAdapter(
-    private val onItemClick: (HomepageActivity.Transaction) -> Unit
-) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
+class TransactionAdapter(private val transactions: List<HomeListActivity.Transaction>) :
+    RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
 
-    private var transactions: List<HomepageActivity.Transaction> = emptyList()
-    private val decimalFormat = DecimalFormat("#.00")
-
-    fun submitList(newTransactions: List<HomepageActivity.Transaction>) {
-        transactions = newTransactions
-        notifyDataSetChanged()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_transaction, parent, false)
-        return TransactionViewHolder(view, onItemClick)
+        return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(transactions[position])
     }
 
-    override fun getItemCount(): Int = transactions.size
+    override fun getItemCount() = transactions.size
 
-    class TransactionViewHolder(
-        itemView: View,
-        private val onItemClick: (HomepageActivity.Transaction) -> Unit
-    ) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
+        private val transactionDate: TextView = itemView.findViewById(R.id.home_list_transactionDate)
+        private val transactionCategory: TextView = itemView.findViewById(R.id.home_list_transactionCategory)
+        private val transactionAmount: TextView = itemView.findViewById(R.id.home_list_transactionAmount)
+        private val transactionSource: TextView = itemView.findViewById(R.id.home_list_transactionSource)
 
-        private val dateTextView: TextView = itemView.findViewById(R.id.transactionDate)
-        private val categoryTextView: TextView = itemView.findViewById(R.id.transactionCategory)
-        private val amountTextView: TextView = itemView.findViewById(R.id.transactionAmount)
-        private val sourceTextView: TextView = itemView.findViewById(R.id.transactionSource)
-
-        fun bind(transaction: HomepageActivity.Transaction) {
-            dateTextView.text = transaction.date
-            categoryTextView.text = transaction.category
-
-            val formattedAmount = "${if (transaction.type == "expense") "-" else "+"}$${transaction.amount}"
-            amountTextView.text = formattedAmount
-            amountTextView.setTextColor(
-                if (transaction.type == "expense")
-                    itemView.context.getColor(R.color.expense_red)
-                else
-                    itemView.context.getColor(R.color.income_green)
-            )
-
-            sourceTextView.text = transaction.source
-
-            itemView.setOnClickListener { onItemClick(transaction) }
+        fun bind(transaction: HomeListActivity.Transaction) {
+            transactionDate.text = transaction.date
+            transactionCategory.text = transaction.category
+            transactionAmount.text = transaction.amount
+            transactionAmount.setTextColor(ContextCompat.getColor(itemView.context, transaction.colorRes))
+            transactionSource.text = transaction.source
         }
     }
 }
