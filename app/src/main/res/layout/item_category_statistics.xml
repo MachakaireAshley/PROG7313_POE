@@ -7,6 +7,7 @@
     android:gravity="center_vertical"
     android:background="?attr/selectableItemBackground">
 
+    <!-- This view is to rank the different categories according to expense amount, with the first one having the highest amount.   -->
     <!-- Rank Number -->
     <TextView
         android:id="@+id/categoryRank"

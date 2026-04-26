@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/custom_blue"
-    >
+    android:background="@color/custom_blue" >
 
-    <!-- App Logo/Icon -->
+    <!-- App Logo -->
     <ImageView
         android:id="@+id/appLogo"
         android:layout_width="200dp"
@@ -29,7 +28,7 @@
         android:textColor="#333333"
         android:layout_marginBottom="12dp" />
 
-    <!-- PIN Dots Container -->
+    <!-- PIN Dots Container: empty circular dots -->
     <LinearLayout
         android:id="@+id/pinDotsContainer"
         android:layout_width="wrap_content"
@@ -74,7 +73,7 @@
         android:id="@+id/errorMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="PIN incorrect."
         android:textSize="14sp"
         android:textColor="#F44336"
         android:layout_marginBottom="32dp"

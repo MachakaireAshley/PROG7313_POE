@@ -316,8 +316,8 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <!--if it do have pin ,go to activity_pin_lock and after enter right pin go to dialog_setup_pin.xml-->
-                        <!--if it do not have pin yet,go to dialog_setup_pin.xml-->
+                        <!--if user does have pin, go to activity_pin_lock and after entering right pin, go to dialog_setup_pin.xml-->
+                        <!--if user does NOT have pin yet, go to dialog_setup_pin.xml-->
                         <ImageButton
                             android:id="@+id/setting_PinLockButton"
                             android:layout_width="20dp"

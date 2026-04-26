@@ -47,7 +47,7 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-<!--    go to dialog_add_recurring_item.xml-->
+    <!-- go to dialog_add_recurring_item.xml-->
     <Button
         android:id="@+id/recurring_item_addButton"
         android:layout_width="match_parent"
