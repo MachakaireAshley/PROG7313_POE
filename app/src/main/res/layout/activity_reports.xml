@@ -169,27 +169,43 @@
                     android:padding="20dp"
                     android:background="@color/white">
 
-                    <!-- Pie Chart Placeholder -->
-                    <View
-                        android:id="@+id/pieChartView"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:layout_gravity="center"
-                        android:background="#E0E0E0" />
+                    <!-- Pie Chart Placeholder  -->
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center">
 
-                    <!-- Legend Container - Will be populated dynamically -->
+                        <View
+                            android:id="@+id/pieChartView"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_gravity="center"
+                            android:background="#E0E0E0" />
+
+                    </FrameLayout>
+
+                    <!-- Dynamic Legend Container -->
                     <LinearLayout
                         android:id="@+id/legendContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center"
                         android:layout_marginTop="16dp">
 
-                        <!-- Sample legend items (will be replaced by dynamic data) -->
-                        <include
-                            layout="@layout/item_legend_sample"
-                            android:id="@+id/sampleLegend1" />
+                        <!-- Legend items will be added dynamically here -->
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:scrollbars="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/legendItemsContainer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="4dp" />
+
+                        </HorizontalScrollView>
 
                     </LinearLayout>
 

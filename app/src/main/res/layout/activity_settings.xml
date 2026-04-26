@@ -95,12 +95,14 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
+                        <!--go to activity_recurring_items.xml-->
                         <ImageButton
-                            android:id="@+id/RightArrowButton1"
+                            android:id="@+id/setting_RecurringItemsButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
-                            app:tint="@color/secondary_text" />
+                            app:tint="@color/secondary_text"
+                            android:contentDescription="Recurring Items"/>
 
 
                     </LinearLayout>
@@ -139,7 +141,7 @@
                             android:layout_marginStart="16dp" />
 
                         <ImageButton
-                            android:id="@+id/RightArrowButton2"
+                            android:id="@+id/setting_BudgetsButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
@@ -181,12 +183,14 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
+                        <!--go to activity_category.xml-->
                         <ImageButton
-                            android:id="@+id/RightArrowButton3"
+                            android:id="@+id/setting_CategoriesButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
-                            app:tint="@color/secondary_text" />
+                            app:tint="@color/secondary_text"
+                            android:contentDescription="Categories"/>
 
 
                     </LinearLayout>
@@ -224,12 +228,14 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
+                        <!--go to activity_member.xml-->
                         <ImageButton
-                            android:id="@+id/RightArrowButton4"
+                            android:id="@+id/setting_MembersButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
-                            app:tint="@color/secondary_text" />
+                            app:tint="@color/secondary_text"
+                            android:contentDescription="Members"/>
 
 
                     </LinearLayout>
@@ -268,11 +274,12 @@
                             android:layout_marginStart="16dp" />
 
                         <ImageButton
-                            android:id="@+id/RightArrowButton5"
+                            android:id="@+id/setting_ThemeButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
-                            app:tint="@color/secondary_text" />
+                            app:tint="@color/secondary_text"
+                            android:contentDescription="Theme"/>
 
                     </LinearLayout>
 
@@ -309,12 +316,15 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
+                        <!--if it do have pin ,go to activity_pin_lock and after enter right pin go to dialog_setup_pin.xml-->
+                        <!--if it do not have pin yet,go to dialog_setup_pin.xml-->
                         <ImageButton
-                            android:id="@+id/RightArrowButton6"
+                            android:id="@+id/setting_PinLockButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
-                            app:tint="@color/secondary_text" />
+                            app:tint="@color/secondary_text"
+                            android:contentDescription="Pin Lock"/>
 
 
                     </LinearLayout>
@@ -353,11 +363,12 @@
                             android:layout_marginStart="16dp" />
 
                         <ImageButton
-                            android:id="@+id/RightArrowButton7"
+                            android:id="@+id/setting_ExportButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
-                            app:tint="@color/secondary_text" />
+                            app:tint="@color/secondary_text"
+                            android:contentDescription="Export CSV"/>
 
                     </LinearLayout>
 
