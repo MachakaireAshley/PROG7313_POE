@@ -7,7 +7,7 @@
     android:padding="24dp"
     android:background="#FFFFFF">
 
-    <!--using in Setting page(member) when the member_addButton be press-->
+    <!--use in Setting page(member) when the member_addButton is pressed-->
 
     <TextView
         android:layout_width="wrap_content"

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="#FFFFFF">
 
-    <!--using in Setting page(recurring item) when the recurring_item_addButton be press-->
+    <!--use in Setting page(recurring item) when the recurring_item_addButton is pressed-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

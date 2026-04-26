@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/custom_blue">
-<!--using in setting page, for set up the pin number-->
+
+<!--use in settings page, to set up the pin number-->
 
     <!--Toolbar for goBack button-->
     <androidx.appcompat.widget.Toolbar
