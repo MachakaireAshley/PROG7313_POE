@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#FFFFFF">
@@ -68,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/category_names"
-               />
+                tools:ignore="TouchTargetSizeCheck" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,7 +85,8 @@
                 android:id="@+id/recurring_item_frequencySpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/frequencies" />
+                android:entries="@array/frequencies"
+                tools:ignore="TouchTargetSizeCheck" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

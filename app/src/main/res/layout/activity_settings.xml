@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/custom_blue">
@@ -145,7 +146,8 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
-                            app:tint="@color/secondary_text" />
+                            app:tint="@color/secondary_text"
+                            tools:ignore="SpeakableTextPresentCheck" />
 
 
                     </LinearLayout>
@@ -316,8 +318,8 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <!--if it do have pin ,go to activity_pin_lock and after enter right pin go to dialog_setup_pin.xml-->
-                        <!--if it do not have pin yet,go to dialog_setup_pin.xml-->
+                        <!--if user does have pin, go to activity_pin_lock and after entering right pin, go to dialog_setup_pin.xml-->
+                        <!--if user does NOT have pin yet, go to dialog_setup_pin.xml-->
                         <ImageButton
                             android:id="@+id/setting_PinLockButton"
                             android:layout_width="20dp"

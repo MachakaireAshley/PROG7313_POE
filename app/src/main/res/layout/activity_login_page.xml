@@ -17,7 +17,6 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <!-- Your Logo Image - Replace with your actual logo drawable -->
 
         <!-- App Name Text -->
         <ImageView
@@ -148,8 +147,5 @@
         android:textColor="@color/light_text"
         android:textSize="14sp" />
 
-    <!-- Divider -->
-
-    <!-- Social Login Options -->
 
 </LinearLayout>

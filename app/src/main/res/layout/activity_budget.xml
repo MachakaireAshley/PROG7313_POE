@@ -26,13 +26,13 @@
         android:gravity="center" />
 
 
-
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/budgetAmountInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="e.g., 5000"
-        android:inputType="numberDecimal" />
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveBudgetButton"

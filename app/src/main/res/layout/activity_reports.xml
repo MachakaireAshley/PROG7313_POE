@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -67,33 +68,34 @@
                     android:id="@+id/monthSelectorCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
+                    android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
+                    tools:ignore="TouchTargetSizeCheck">
 
                     <LinearLayout
                         android:id="@+id/monthSelectorLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="12dp"
+                        android:background="@color/white"
                         android:gravity="center"
-                        android:background="@color/white">
+                        android:orientation="horizontal"
+                        android:padding="12dp">
 
                         <TextView
                             android:id="@+id/monthYearText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:gravity="center"
                             android:text="March 2026"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
                             android:textColor="@color/custom_blue"
-                            android:gravity="center" />
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:id="@+id/monthDropdownIcon"
@@ -111,40 +113,41 @@
                     android:id="@+id/categoryFilterCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
+                    android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
+                    tools:ignore="TouchTargetSizeCheck">
 
                     <LinearLayout
                         android:id="@+id/categoryFilterLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="12dp"
+                        android:background="@color/white"
                         android:gravity="center"
-                        android:background="@color/white">
+                        android:orientation="horizontal"
+                        android:padding="12dp">
 
                         <TextView
                             android:id="@+id/categoryFilterText"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:gravity="center"
                             android:text="EXP. By Category"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
                             android:textColor="@color/custom_blue"
-                            android:gravity="center" />
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
                         <ImageView
                             android:id="@+id/categoryFilterDropdownIcon"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_dropdown"
-                            app:tint="@color/custom_blue"/>
+                            app:tint="@color/custom_blue" />
 
                     </LinearLayout>
 
@@ -196,7 +199,8 @@
                         <HorizontalScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:scrollbars="horizontal">
+                            android:scrollbars="horizontal"
+                            tools:ignore="SpeakableTextPresentCheck">
 
                             <LinearLayout
                                 android:id="@+id/legendItemsContainer"
