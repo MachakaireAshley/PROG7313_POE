@@ -46,7 +46,6 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.auth)
-    implementation(libs.androidx.room.compiler)
     implementation(libs.protolite.well.known.types)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -11,28 +11,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PROG7313_POE">
-
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".LoginPageActivity" android:exported="false" />
-        <activity android:name=".HomeListActivity" android:exported="false" />
-        <activity android:name=".HomeCalendarActivity" android:exported="false" />
-        <activity android:name=".AccountsActivity" android:exported="false" />
-        <activity android:name=".AddTransactionActivity" android:exported="false" />
-        <activity android:name=".ReportsActivity" android:exported="false" />
-        <activity android:name=".SettingsActivity" android:exported="false" />
-        <activity android:name=".CategoryActivity" android:exported="false" />
-        <activity android:name=".MemberActivity" android:exported="false" />
-        <activity android:name=".RecurringItemActivity" android:exported="false" />
-        <activity android:name=".PinLockActivity" android:exported="false" />
-
+        <activity
+            android:name=".LoginPageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeCalendarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddTransactionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MemberActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RecurringItemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PinLockActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

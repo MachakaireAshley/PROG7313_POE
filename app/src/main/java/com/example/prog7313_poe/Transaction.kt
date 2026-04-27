@@ -3,7 +3,7 @@ package com.example.prog7313_poe
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Date
+import java.util.Date
 
 @Entity("transaction_table")
 data class Transaction (

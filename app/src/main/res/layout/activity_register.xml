@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".RegisterActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pocket Protector Registration"
+        android:textAlignment="center"
+        android:textSize="24dp" />
+
+    <EditText
+        android:id="@+id/emailText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="text"
+        android:minHeight="48dp" />
+
+    <EditText
+        android:id="@+id/passwordText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="Password"
+        android:minHeight="48dp" />
+
+    <Button
+        android:id="@+id/buttonRegister"
+        android:layout_width="305dp"
+        android:layout_height="wrap_content"
+        android:text="Register" />
+
+    <Button
+        android:id="@+id/buttonBackToLogin"
+        android:layout_width="308dp"
+        android:layout_height="wrap_content"
+        android:text="Return to Login Page" />
+</LinearLayout>
