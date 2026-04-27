@@ -8,33 +8,32 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.util.*
+import kotlin.math.roundToInt
 
 class ReportsActivity : AppCompatActivity() {
 
     private lateinit var monthYearText: TextView
-    private lateinit var categoryFilterText: TextView
     private lateinit var totalExpenses: TextView
     private lateinit var categoriesRecyclerView: RecyclerView
     private lateinit var bottomNav: BottomNavigationView
+    private lateinit var db: AppDatabase
+    private var currentDate = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reports)
+        db = AppDatabase.getDatabase(this)
 
-        initViews()
-        setupBottomNav()
-        setupFilters()
-        loadReportData()
-    }
-
-    private fun initViews() {
         monthYearText = findViewById(R.id.monthYearText)
-        categoryFilterText = findViewById(R.id.categoryFilterText)
         totalExpenses = findViewById(R.id.totalExpenses)
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView)
         bottomNav = findViewById(R.id.bottomNavigationView)
 
         categoriesRecyclerView.layoutManager = LinearLayoutManager(this)
+        setupBottomNav()
+        setupFilters()
+        loadReportData()
     }
 
     private fun setupBottomNav() {
@@ -68,27 +67,65 @@ class ReportsActivity : AppCompatActivity() {
 
     private fun setupFilters() {
         findViewById<android.view.View>(R.id.monthSelectorCard).setOnClickListener {
-            Toast.makeText(this, "Select month", Toast.LENGTH_SHORT).show()
+            showMonthPicker()
         }
-
         findViewById<android.view.View>(R.id.categoryFilterCard).setOnClickListener {
-            Toast.makeText(this, "Filter by category", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Category filter (full version)", Toast.LENGTH_SHORT).show()
         }
     }
 
+    private fun showMonthPicker() {
+        val year = currentDate.get(Calendar.YEAR)
+        val month = currentDate.get(Calendar.MONTH)
+        android.app.DatePickerDialog(this, { _, y, m, _ ->
+            currentDate.set(y, m, 1)
+            loadReportData()
+        }, year, month, 1).show()
+    }
+
     private fun loadReportData() {
-        totalExpenses.text = "R 456.00"
+        Thread {
+            val start = getStartOfMonth(currentDate.time)
+            val end = getEndOfMonth(currentDate.time)
+            val expenses = db.transactionDao().getByTypeBetweenDates("expense", start, end)
+            val total = expenses.sumOf { it.amount }
 
-        val categories = listOf(
-            CategoryStat("1", "Food", "R 150.00", "32.9%"),
-            CategoryStat("2", "Transport", "R 100.00", "21.9%"),
-            CategoryStat("3", "Entertainment", "R 80.00", "17.5%"),
-            CategoryStat("4", "Utilities", "R 70.00", "15.4%"),
-            CategoryStat("5", "Shopping", "R 56.00", "12.3%")
-        )
+            // group by categoryId
+            val grouped = expenses.groupBy { it.categoryId }
+            val categoryTotals = mutableListOf<CategoryStat>()
+            for ((catId, list) in grouped) {
+                val sum = list.sumOf { it.amount }
+                val percentage = if (total > 0) (sum / total * 100).roundToInt() else 0
+                categoryTotals.add(CategoryStat(catId.toString(), "Category $catId", "R %.2f".format(sum), "$percentage%"))
+            }
+            categoryTotals.sortByDescending { it.amount }
 
-        val adapter = CategoryStatAdapter(categories)
-        categoriesRecyclerView.adapter = adapter
+            runOnUiThread {
+                val sdf = java.text.SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+                monthYearText.text = sdf.format(currentDate.time)
+                totalExpenses.text = "R %.2f".format(total)
+                val adapter = CategoryStatAdapter(categoryTotals)
+                categoriesRecyclerView.adapter = adapter
+            }
+        }.start()
+    }
+
+    private fun getStartOfMonth(date: Date): Date {
+        val cal = Calendar.getInstance().apply { time = date }
+        cal.set(Calendar.DAY_OF_MONTH, 1)
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        return cal.time
+    }
+
+    private fun getEndOfMonth(date: Date): Date {
+        val cal = Calendar.getInstance().apply { time = date }
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH))
+        cal.set(Calendar.HOUR_OF_DAY, 23)
+        cal.set(Calendar.MINUTE, 59)
+        cal.set(Calendar.SECOND, 59)
+        return cal.time
     }
 
     data class CategoryStat(val rank: String, val name: String, val amount: String, val ratio: String)

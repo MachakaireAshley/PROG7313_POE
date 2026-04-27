@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class CategoryAdapter(
-    private val categories: List<CategoryActivity.Category>,
-    private val onItemClick: (CategoryActivity.Category) -> Unit
+    private val categories: List<Category>,
+    private val onItemClick: (Category) -> Unit
 ) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,8 +27,15 @@ class CategoryAdapter(
         private val categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
         private val categoryName: TextView = itemView.findViewById(R.id.categoryName)
 
-        fun bind(category: CategoryActivity.Category, onItemClick: (CategoryActivity.Category) -> Unit) {
-            categoryIcon.setImageResource(category.iconRes)
+        fun bind(category: Category, onItemClick: (Category) -> Unit) {
+            // use default icon based on name
+            val iconRes = when {
+                category.name.contains("food", ignoreCase = true) -> R.drawable.ic_category_food
+                category.name.contains("transport", ignoreCase = true) -> R.drawable.ic_category_transport
+                category.name.contains("shopping", ignoreCase = true) -> R.drawable.ic_category_shopping
+                else -> R.drawable.ic_category_other
+            }
+            categoryIcon.setImageResource(iconRes)
             categoryName.text = category.name
             itemView.setOnClickListener { onItemClick(category) }
         }

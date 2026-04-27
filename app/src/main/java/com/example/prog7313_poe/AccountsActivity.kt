@@ -1,5 +1,6 @@
 package com.example.prog7313_poe
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
 
 class AccountsActivity : AppCompatActivity() {
 
@@ -18,15 +20,19 @@ class AccountsActivity : AppCompatActivity() {
     private lateinit var accountsRecyclerView: RecyclerView
     private lateinit var addAccountButton: Button
     private lateinit var bottomNav: BottomNavigationView
+    private lateinit var accountAdapter: AccountAdapter
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_accounts)
 
+        db = AppDatabase.getDatabase(this)
         initViews()
         setupBottomNav()
         setupAddButton()
         loadAccounts()
+        loadSummary()
     }
 
     private fun initViews() {
@@ -38,6 +44,8 @@ class AccountsActivity : AppCompatActivity() {
         bottomNav = findViewById(R.id.bottomNavigationView)
 
         accountsRecyclerView.layoutManager = LinearLayoutManager(this)
+        accountAdapter = AccountAdapter(emptyList())
+        accountsRecyclerView.adapter = accountAdapter
     }
 
     private fun setupBottomNav() {
@@ -71,24 +79,84 @@ class AccountsActivity : AppCompatActivity() {
 
     private fun setupAddButton() {
         addAccountButton.setOnClickListener {
-            Toast.makeText(this, "Add account feature coming soon", Toast.LENGTH_SHORT).show()
+            showAddAccountDialog()
         }
     }
 
-    private fun loadAccounts() {
-        val accounts = listOf(
-            Account("Bank Account", "R 2,500", "ZAR", R.drawable.ic_account_bank),
-            Account("Cash", "R 1,200", "ZAR", R.drawable.ic_account_cash),
-            Account("Savings", "R 300", "ZAR", R.drawable.ic_account_savings)
-        )
+    private fun showAddAccountDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Add New Account")
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_add_account, null)
+        val nameInput = dialogView.findViewById<TextInputEditText>(R.id.dialog_account_name)
+        val amountInput = dialogView.findViewById<TextInputEditText>(R.id.dialog_account_amount)
 
-        val adapter = AccountAdapter(accounts)
-        accountsRecyclerView.adapter = adapter
-
-        accountIncomeAmount.text = "R 1,234"
-        accountExpenseAmount.text = "R 456"
-        netAssetsAmount.text = "R 4,000"
+        builder.setView(dialogView)
+        builder.setPositiveButton("Save") { _, _ ->
+            val name = nameInput.text.toString().trim()
+            val amountStr = amountInput.text.toString().trim()
+            if (name.isNotEmpty() && amountStr.isNotEmpty()) {
+                val amount = amountStr.toDoubleOrNull() ?: 0.0
+                val account = Account(accountName = name, amount = amount)
+                Thread {
+                    db.accountDao().insert(account)
+                    runOnUiThread {
+                        loadAccounts()
+                        loadSummary()
+                        Toast.makeText(this, "Account added", Toast.LENGTH_SHORT).show()
+                    }
+                }.start()
+            } else {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+            }
+        }
+        builder.setNegativeButton("Cancel", null)
+        builder.show()
     }
 
-    data class Account(val name: String, val balance: String, val currency: String, val iconRes: Int)
+    private fun loadAccounts() {
+        Thread {
+            val accounts = db.accountDao().getAll()
+            runOnUiThread {
+                accountAdapter.updateData(accounts)
+            }
+        }.start()
+    }
+
+    private fun loadSummary() {
+        Thread {
+            val now = java.util.Date()
+            val start = getStartOfMonth(now)
+            val end = getEndOfMonth(now)
+            val incomes = db.transactionDao().getByTypeBetweenDates("income", start, end)
+            val expenses = db.transactionDao().getByTypeBetweenDates("expense", start, end)
+            val totalIncome = incomes.sumOf { it.amount }
+            val totalExpense = expenses.sumOf { it.amount }
+            val netAssets = totalIncome - totalExpense
+
+            runOnUiThread {
+                accountIncomeAmount.text = "R %.2f".format(totalIncome)
+                accountExpenseAmount.text = "R %.2f".format(totalExpense)
+                netAssetsAmount.text = "R %.2f".format(netAssets)
+            }
+        }.start()
+    }
+
+    private fun getStartOfMonth(date: java.util.Date): java.util.Date {
+        val cal = java.util.Calendar.getInstance().apply { time = date }
+        cal.set(java.util.Calendar.DAY_OF_MONTH, 1)
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0)
+        cal.set(java.util.Calendar.MINUTE, 0)
+        cal.set(java.util.Calendar.SECOND, 0)
+        return cal.time
+    }
+
+    private fun getEndOfMonth(date: java.util.Date): java.util.Date {
+        val cal = java.util.Calendar.getInstance().apply { time = date }
+        cal.set(java.util.Calendar.DAY_OF_MONTH, cal.getActualMaximum(java.util.Calendar.DAY_OF_MONTH))
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 23)
+        cal.set(java.util.Calendar.MINUTE, 59)
+        cal.set(java.util.Calendar.SECOND, 59)
+        return cal.time
+    }
 }

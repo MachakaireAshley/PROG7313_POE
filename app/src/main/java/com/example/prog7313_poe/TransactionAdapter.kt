@@ -6,7 +6,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class TransactionAdapter(private val transactions: List<HomeListActivity.Transaction>) :
+class TransactionAdapter(private val transactions: List<Transaction>) :
     RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,12 +27,14 @@ class TransactionAdapter(private val transactions: List<HomeListActivity.Transac
         private val transactionAmount: TextView = itemView.findViewById(R.id.home_list_transactionAmount)
         private val transactionSource: TextView = itemView.findViewById(R.id.home_list_transactionSource)
 
-        fun bind(transaction: HomeListActivity.Transaction) {
-            transactionDate.text = transaction.date
-            transactionCategory.text = transaction.category
-            transactionAmount.text = transaction.amount
-            transactionAmount.setTextColor(ContextCompat.getColor(itemView.context, transaction.colorRes))
-            transactionSource.text = transaction.source
+        fun bind(transaction: Transaction) {
+            val sdf = java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault())
+            transactionDate.text = sdf.format(transaction.date)
+            transactionCategory.text = "Category: ${transaction.categoryId}"  // you can later fetch category name
+            transactionAmount.text = "R %.2f".format(transaction.amount)
+            val color = if (transaction.transactionType == "income") R.color.income_green else R.color.expense_red
+            transactionAmount.setTextColor(ContextCompat.getColor(itemView.context, color))
+            transactionSource.text = "Account: ${transaction.accountId}"
         }
     }
 }

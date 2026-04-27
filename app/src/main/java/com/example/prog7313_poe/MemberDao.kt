@@ -9,11 +9,11 @@ import androidx.room.Query
 interface MemberDao
 {
     @Insert
-    suspend fun insert(member: Member)
+    fun insert(member: Member)
 
     @Query("SELECT * FROM member_table")
-    suspend fun getAll(): List<Member>
+    fun getAll(): List<Member>
 
     @Query("DELETE FROM member_table WHERE id = :id")
-    suspend fun deleteById(id: Int)
+    fun deleteById(id: Int)
 }

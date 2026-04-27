@@ -4,9 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.checkbox.MaterialCheckBox
 
-class MemberAdapter(private val members: List<MemberActivity.Member>) :
+class MemberAdapter(private val members: List<Member>) :
     RecyclerView.Adapter<MemberAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,11 +22,9 @@ class MemberAdapter(private val members: List<MemberActivity.Member>) :
 
     class ViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
         private val memberName: TextView = itemView.findViewById(R.id.memberName)
-        private val checkbox: MaterialCheckBox = itemView.findViewById(R.id.memberCheckbox)
 
-        fun bind(member: MemberActivity.Member) {
+        fun bind(member: Member) {
             memberName.text = member.name
-            checkbox.isChecked = false
         }
     }
 }

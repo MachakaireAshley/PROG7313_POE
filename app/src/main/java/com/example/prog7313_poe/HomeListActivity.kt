@@ -1,13 +1,15 @@
 package com.example.prog7313_poe
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.util.*
 
 class HomeListActivity : AppCompatActivity() {
 
@@ -17,13 +19,17 @@ class HomeListActivity : AppCompatActivity() {
     private lateinit var budgetPercentage: TextView
     private lateinit var budgetExpense: TextView
     private lateinit var budgetLeft: TextView
-    private lateinit var budgetProgress: android.widget.ProgressBar
+    private lateinit var budgetProgress: ProgressBar
     private lateinit var transactionsRecyclerView: RecyclerView
     private lateinit var bottomNav: BottomNavigationView
+    private lateinit var db: AppDatabase
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_list)
+        db = AppDatabase.getDatabase(this)
+        prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
         initViews()
         setupBottomNav()
@@ -76,9 +82,8 @@ class HomeListActivity : AppCompatActivity() {
 
     private fun setupToggleButtons() {
         findViewById<ImageButton>(R.id.home_calendar_listButton).setOnClickListener {
-            // Already on list view
+            // already list view
         }
-
         findViewById<ImageButton>(R.id.home_calendar_calendarButton).setOnClickListener {
             startActivity(Intent(this, HomeCalendarActivity::class.java))
             finish()
@@ -86,28 +91,53 @@ class HomeListActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
-        incomeAmount.text = "R 1,234"
-        expenseAmount.text = "R 456"
-        totalAmount.text = "R 778"
+        Thread {
+            val now = Date()
+            val startOfMonth = getStartOfMonth(now)
+            val endOfMonth = getEndOfMonth(now)
 
-        val budget = 5000.0
-        val expense = 456.0
-        val percentage = ((expense / budget) * 100).toInt()
+            val incomes = db.transactionDao().getByTypeBetweenDates("income", startOfMonth, endOfMonth)
+            val expenses = db.transactionDao().getByTypeBetweenDates("expense", startOfMonth, endOfMonth)
+            val totalIncome = incomes.sumOf { it.amount }
+            val totalExpense = expenses.sumOf { it.amount }
+            val net = totalIncome - totalExpense
 
-        budgetPercentage.text = "$percentage%"
-        budgetExpense.text = "R $expense"
-        budgetLeft.text = "R ${budget - expense}"
-        budgetProgress.progress = percentage
+            val all = db.transactionDao().getBetweenDates(startOfMonth, endOfMonth)
+            val recent = all.sortedByDescending { it.date }.take(10)
 
-        val transactions = listOf(
-            Transaction("Mar 8, 2026", "Food", "R 45.00", "Cash", R.color.expense_red),
-            Transaction("Mar 7, 2026", "Salary", "R 500.00", "Bank", R.color.income_green),
-            Transaction("Mar 6, 2026", "Transport", "R 30.00", "Cash", R.color.expense_red)
-        )
+            val budgetLimit = prefs.getFloat("monthly_budget", 5000f).toDouble()
+            val percentage = if (budgetLimit > 0) ((totalExpense / budgetLimit) * 100).toInt() else 0
 
-        val adapter = TransactionAdapter(transactions)
-        transactionsRecyclerView.adapter = adapter
+            runOnUiThread {
+                incomeAmount.text = "R %.2f".format(totalIncome)
+                expenseAmount.text = "R %.2f".format(totalExpense)
+                totalAmount.text = "R %.2f".format(net)
+                budgetPercentage.text = "$percentage%"
+                budgetExpense.text = "R %.2f".format(totalExpense)
+                budgetLeft.text = "R %.2f".format(budgetLimit - totalExpense)
+                budgetProgress.progress = percentage.coerceIn(0, 100)
+
+                val adapter = TransactionAdapter(recent)
+                transactionsRecyclerView.adapter = adapter
+            }
+        }.start()
     }
 
-    data class Transaction(val date: String, val category: String, val amount: String, val source: String, val colorRes: Int)
+    private fun getStartOfMonth(date: Date): Date {
+        val cal = Calendar.getInstance().apply { time = date }
+        cal.set(Calendar.DAY_OF_MONTH, 1)
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        return cal.time
+    }
+
+    private fun getEndOfMonth(date: Date): Date {
+        val cal = Calendar.getInstance().apply { time = date }
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH))
+        cal.set(Calendar.HOUR_OF_DAY, 23)
+        cal.set(Calendar.MINUTE, 59)
+        cal.set(Calendar.SECOND, 59)
+        return cal.time
+    }
 }

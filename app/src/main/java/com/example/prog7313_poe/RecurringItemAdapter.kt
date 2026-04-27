@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class RecurringItemAdapter(
-    private val items: List<RecurringItemActivity.RecurringItem>,
-    private val onDetailClick: (RecurringItemActivity.RecurringItem) -> Unit
+    private val items: List<RecurringItem>,
+    private val onAction: (RecurringItem, Boolean) -> Unit
 ) : RecyclerView.Adapter<RecurringItemAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -18,31 +18,22 @@ class RecurringItemAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position], onDetailClick)
+        holder.bind(items[position], onAction)
     }
 
     override fun getItemCount() = items.size
 
     class ViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
         private val titleText: TextView = itemView.findViewById(R.id.recurring_itemTitle)
-        private val categoryText: TextView = itemView.findViewById(R.id.recurring_item_categoryName)
-        private val frequencyText: TextView = itemView.findViewById(R.id.recurring_item_frequency)
-        private val nextDateText: TextView = itemView.findViewById(R.id.recurring_item_nextDate)
         private val amountText: TextView = itemView.findViewById(R.id.recurring_item_amount)
         private val detailButton: Button = itemView.findViewById(R.id.recurring_item_detailButton)
         private val deleteButton: Button = itemView.findViewById(R.id.recurring_item_deleteButton)
 
-        fun bind(item: RecurringItemActivity.RecurringItem, onDetailClick: (RecurringItemActivity.RecurringItem) -> Unit) {
+        fun bind(item: RecurringItem, onAction: (RecurringItem, Boolean) -> Unit) {
             titleText.text = item.title
-            categoryText.text = item.category
-            frequencyText.text = item.frequency
-            nextDateText.text = "Next: ${item.nextDate}"
-            amountText.text = item.amount
-
-            detailButton.setOnClickListener { onDetailClick(item) }
-            deleteButton.setOnClickListener {
-                // Handle delete
-            }
+            amountText.text = "R %.2f".format(item.amount)
+            detailButton.setOnClickListener { onAction(item, false) }
+            deleteButton.setOnClickListener { onAction(item, true) }
         }
     }
 }

@@ -33,7 +33,7 @@ class AccountAdapter(private var accounts: List<Account>) :
         private val accountCurrency: TextView = itemView.findViewById(R.id.account_Currency)
 
         fun bind(account: Account) {
-            // simple icon mapping based on name
+
             val iconRes = when {
                 account.accountName.contains("bank", ignoreCase = true) -> R.drawable.ic_account_bank
                 account.accountName.contains("cash", ignoreCase = true) -> R.drawable.ic_account_cash
