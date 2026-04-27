@@ -16,6 +16,6 @@ data class Transaction (
     val accountId: Int,
     val categoryId: Int,
     val memberId: Int,
-    val photo: Boolean
+    val photo: Boolean = false
 
 )

@@ -6,8 +6,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class AccountAdapter(private val accounts: List<AccountsActivity.Account>) :
+class AccountAdapter(private var accounts: List<Account>) :
     RecyclerView.Adapter<AccountAdapter.AccountViewHolder>() {
+
+    fun updateData(newList: List<Account>) {
+        accounts = newList
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -27,11 +32,17 @@ class AccountAdapter(private val accounts: List<AccountsActivity.Account>) :
         private val accountBalance: TextView = itemView.findViewById(R.id.account_Balance)
         private val accountCurrency: TextView = itemView.findViewById(R.id.account_Currency)
 
-        fun bind(account: AccountsActivity.Account) {
-            accountIcon.setImageResource(account.iconRes)
-            accountName.text = account.name
-            accountBalance.text = account.balance
-            accountCurrency.text = account.currency
+        fun bind(account: Account) {
+            // simple icon mapping based on name
+            val iconRes = when {
+                account.accountName.contains("bank", ignoreCase = true) -> R.drawable.ic_account_bank
+                account.accountName.contains("cash", ignoreCase = true) -> R.drawable.ic_account_cash
+                else -> R.drawable.ic_account_savings
+            }
+            accountIcon.setImageResource(iconRes)
+            accountName.text = account.accountName
+            accountBalance.text = "R %.2f".format(account.amount)
+            accountCurrency.text = "ZAR"
         }
     }
 }

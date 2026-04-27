@@ -9,8 +9,11 @@ import androidx.room.Query
 interface CategoryDao
 {
     @Insert
-    fun Insert(category: Category)
+    suspend fun insert(category: Category)
 
     @Query(value = "SELECT * FROM category_table")
-    fun getAll(): List<Category>
+    suspend fun getAll(): List<Category>
+
+    @Query("DELETE FROM category_table WHERE id = :id")
+    suspend fun deleteById(id: Int)
 }

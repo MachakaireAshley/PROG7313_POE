@@ -9,6 +9,6 @@ data class Category(
     @PrimaryKey(autoGenerate = true)
     val id: Int=0,
     val name: String,
-    val percentage: Int,
+    val percentage: Int=0,
 
 )
