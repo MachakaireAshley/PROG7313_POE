@@ -80,6 +80,7 @@ class ReportsActivity : AppCompatActivity() {
         categoriesRecyclerView.layoutManager = LinearLayoutManager(this)
         setupBottomNav()
         setupFilters()
+
         loadReportData()
     }
 
@@ -224,11 +225,13 @@ class ReportsActivity : AppCompatActivity() {
                 val sum = list.sumOf { it.amount }
                 val percentage = if (total > 0) (sum / total * 100).roundToInt() else 0
 
-                val categoryName = categoryMap[catId]?.name ?: "Unknown"
-
+                var categoryName = categoryMap[catId]?.name
+                if (categoryName == null) {
+                    categoryName = db.categoryDao().getNameById(catId) ?: "Unknown"
+                }
                 categoryTotals.add(
                     CategoryStat(
-                        "", // temporary rank
+                        "",
                         categoryName,
                         sum,
                         "$percentage%"
