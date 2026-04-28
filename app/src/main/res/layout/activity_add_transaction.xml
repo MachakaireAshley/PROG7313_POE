@@ -161,6 +161,96 @@
 
         </androidx.cardview.widget.CardView>
 
+            <!-- Start Time Field -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:background="@color/white">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Start Time"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/add_startTimeText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select time"
+                        android:textSize="14sp"
+                        android:textColor="@color/custom_blue"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/add_startTimeButton"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="8dp"
+                        app:srcCompat="@drawable/ic_home_calendar"
+                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- End Time Field -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:background="@color/white">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="End Time"
+                        android:textSize="14sp"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:id="@+id/add_endTimeText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select time"
+                        android:textSize="14sp"
+                        android:textColor="@color/custom_blue"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/add_endTimeButton"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="8dp"
+                        app:srcCompat="@drawable/ic_home_calendar"
+                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
             <!-- Amount Field -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
