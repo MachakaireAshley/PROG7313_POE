@@ -12,6 +12,8 @@ data class Transaction (
     val amount: Double,
     val transactionType: String,
     val date: Date,
+    val startTime: Date,
+    val endTime: Date,
     val accountId: Int,
     val categoryId: Int,
     val memberId: Int,
