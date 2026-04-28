@@ -10,15 +10,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeCalendarActivity : AppCompatActivity() {
 
+
     private lateinit var calendarIncome: TextView
     private lateinit var calendarExpense: TextView
     private lateinit var calendarTotal: TextView
     private lateinit var calendarView: CalendarView
     private lateinit var bottomNav: BottomNavigationView
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_calendar)
+        db = AppDatabase.getDatabase(this)
 
         initViews()
         setupBottomNav()
@@ -79,12 +82,44 @@ class HomeCalendarActivity : AppCompatActivity() {
             updateDataForDate(year, month, dayOfMonth)
         }
 
-        updateDataForDate(2026, 2, 8)
+        val today = java.util.Calendar.getInstance()
+        updateDataForDate(
+            today.get(java.util.Calendar.YEAR),
+            today.get(java.util.Calendar.MONTH),
+            today.get(java.util.Calendar.DAY_OF_MONTH)
+        )
     }
 
     private fun updateDataForDate(year: Int, month: Int, day: Int) {
-        calendarIncome.text = "R 123"
-        calendarExpense.text = "R 456"
-        calendarTotal.text = "R -333"
+
+
+        Thread {
+            val cal = java.util.Calendar.getInstance()
+
+            // Start of selected day
+            cal.set(year, month, day, 0, 0, 0)
+            cal.set(java.util.Calendar.MILLISECOND, 0)
+            val startOfDay = cal.time
+
+            // End of selected day
+            cal.set(year, month, day, 23, 59, 59)
+            cal.set(java.util.Calendar.MILLISECOND, 999)
+            val endOfDay = cal.time
+
+            val incomes = db.transactionDao().getByTypeBetweenDates("income", startOfDay, endOfDay)
+            val expenses = db.transactionDao().getByTypeBetweenDates("expense", startOfDay, endOfDay)
+
+            val totalIncome = incomes.sumOf { it.amount }
+            val totalExpense = expenses.sumOf { it.amount }
+            val net = totalIncome - totalExpense
+
+            runOnUiThread {
+                calendarIncome.text = "R %.2f".format(totalIncome)
+                calendarExpense.text = "R %.2f".format(totalExpense)
+                calendarTotal.text = "R %.2f".format(net)
+            }
+        }.start()
     }
+
+
 }

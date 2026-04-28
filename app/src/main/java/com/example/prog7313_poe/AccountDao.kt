@@ -4,6 +4,7 @@ package com.example.prog7313_poe
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface AccountDao
@@ -16,4 +17,11 @@ interface AccountDao
 
     @Query("DELETE FROM account_table WHERE id = :id")
     fun deleteById(id: Int)
+
+    //added a get by id for updating account balance
+    @Query("SELECT * FROM account_table WHERE id = :id LIMIT 1")
+    fun getById(id: Int): Account?
+
+    @Update
+    fun update(account: Account)
 }

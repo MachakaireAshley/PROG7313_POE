@@ -132,7 +132,9 @@ class AccountsActivity : AppCompatActivity() {
             val expenses = db.transactionDao().getByTypeBetweenDates("expense", start, end)
             val totalIncome = incomes.sumOf { it.amount }
             val totalExpense = expenses.sumOf { it.amount }
-            val netAssets = totalIncome - totalExpense
+            //sum of all money within all accounts
+            val accounts = db.accountDao().getAll()
+            val netAssets = accounts.sumOf { it.amount }
 
             runOnUiThread {
                 accountIncomeAmount.text = "R %.2f".format(totalIncome)

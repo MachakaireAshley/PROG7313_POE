@@ -8,7 +8,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
-import java.sql.Date
 import java.util.*
 
 class AddTransactionActivity : AppCompatActivity() {
@@ -74,10 +73,28 @@ class AddTransactionActivity : AppCompatActivity() {
     }
 
     private fun loadDropdownData() {
+
+        categoryCard.isEnabled = false
+        accountCard.isEnabled = false
+        memberCard.isEnabled = false
+        categoryArrow.isEnabled = false
+        accountArrow.isEnabled = false
+        memberArrow.isEnabled = false
+
+
         Thread {
             categories = db.categoryDao().getAll()
             accounts = db.accountDao().getAll()
             members = db.memberDao().getAll()
+
+            runOnUiThread {
+                categoryCard.isEnabled = true
+                accountCard.isEnabled = true
+                memberCard.isEnabled = true
+                categoryArrow.isEnabled = true
+                accountArrow.isEnabled = true
+                memberArrow.isEnabled = true
+            }
         }.start()
     }
 
@@ -203,7 +220,7 @@ class AddTransactionActivity : AppCompatActivity() {
             name = memoInput.text.toString().ifEmpty { "Transaction" },
             amount = amount,
             transactionType = selectedType,
-            date = selectedDate.time as Date,
+            date = selectedDate.time,
             accountId = selectedAccountId!!,
             categoryId = selectedCategoryId!!,
             memberId = selectedMemberId!!,
@@ -212,6 +229,18 @@ class AddTransactionActivity : AppCompatActivity() {
 
         Thread {
             db.transactionDao().insert(transaction)
+
+            //update the account balance when a transaction is added
+            val account = db.accountDao().getById(selectedAccountId!!)
+            if (account != null) {
+                val updatedAmount = when (selectedType) {
+                    "income" -> account.amount + amount
+                    "expense" -> account.amount - amount
+                    else -> account.amount
+                }
+                db.accountDao().update(account.copy(amount = updatedAmount))
+            }
+
             runOnUiThread {
                 Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
                 if (shouldFinish) finish() else clearForm()
