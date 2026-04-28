@@ -64,6 +64,15 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/home_list_transactionPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:layout_marginTop="12dp" />
+
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

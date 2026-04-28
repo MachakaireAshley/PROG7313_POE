@@ -1,6 +1,5 @@
 package com.example.prog7313_poe
 
-
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
@@ -16,6 +15,7 @@ data class Transaction (
     val accountId: Int,
     val categoryId: Int,
     val memberId: Int,
-    val photo: Boolean = false
+    val photo: Boolean = false,
+    val photoPath: String?=null
 
 )

@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import android.view.View
+import android.widget.ImageView
 
 class TransactionAdapter(private val transactions: List<Transaction>) :
     RecyclerView.Adapter<TransactionAdapter.ViewHolder>() {
@@ -26,6 +28,7 @@ class TransactionAdapter(private val transactions: List<Transaction>) :
         private val transactionCategory: TextView = itemView.findViewById(R.id.home_list_transactionCategory)
         private val transactionAmount: TextView = itemView.findViewById(R.id.home_list_transactionAmount)
         private val transactionSource: TextView = itemView.findViewById(R.id.home_list_transactionSource)
+        private val transactionPhoto: ImageView = itemView.findViewById(R.id.home_list_transactionPhoto)
 
         fun bind(transaction: Transaction) {
             val sdf = java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault())
@@ -35,6 +38,21 @@ class TransactionAdapter(private val transactions: List<Transaction>) :
             val color = if (transaction.transactionType == "income") R.color.income_green else R.color.expense_red
             transactionAmount.setTextColor(ContextCompat.getColor(itemView.context, color))
             transactionSource.text = "Account: ${transaction.accountId}"
+
+            //for the adding of photos
+            if (transaction.photoPath != null) {
+                val file = java.io.File(transaction.photoPath)
+                if (file.exists()) {
+
+                    transactionPhoto.setImageURI(android.net.Uri.fromFile(file))
+                    transactionPhoto.visibility = View.VISIBLE
+                } else {
+
+                    transactionPhoto.visibility = View.GONE
+                }
+            } else {
+                transactionPhoto.visibility = View.GONE
+            }
         }
     }
 }

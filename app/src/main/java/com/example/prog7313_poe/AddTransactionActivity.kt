@@ -2,13 +2,20 @@ package com.example.prog7313_poe
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*
+import android.widget.ImageView
+import android.os.Environment
+import androidx.core.content.FileProvider
+import java.io.File
+import java.text.SimpleDateFormat
 
 class AddTransactionActivity : AppCompatActivity() {
 
@@ -29,6 +36,9 @@ class AddTransactionActivity : AppCompatActivity() {
     private lateinit var categoryArrow: ImageButton
     private lateinit var accountArrow: ImageButton
     private lateinit var memberArrow: ImageButton
+    //for the photos
+    private lateinit var photoButton: View
+    private lateinit var photoPreview: ImageView
 
     private var selectedType = "expense"
     private var selectedDate = Calendar.getInstance()
@@ -40,6 +50,36 @@ class AddTransactionActivity : AppCompatActivity() {
     private var categories = listOf<Category>()
     private var accounts = listOf<Account>()
     private var members = listOf<Member>()
+
+    //photo variables
+    private var pendingPhotoUri: Uri? = null
+    private var photoPath: String? = null
+
+    //taking a photo
+    private val takePictureLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+        // This runs after the user takes a photo
+        // success = true means the photo was taken successfully
+        if (success) {
+            photoPreview.setImageURI(pendingPhotoUri)
+            photoPreview.visibility = View.VISIBLE
+        }
+    }
+
+    //selecting an image from gallery
+    private val pickImageLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri ->
+
+        uri?.let {
+            val file = copyUriToFile(it)
+            photoPath = file.absolutePath
+            photoPreview.setImageURI(it)
+            photoPreview.visibility = View.VISIBLE
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +110,9 @@ class AddTransactionActivity : AppCompatActivity() {
         categoryArrow = findViewById(R.id.add_categoryButton)
         accountArrow = findViewById(R.id.add_select_accountButton)
         memberArrow = findViewById(R.id.add_choose_memberCardButton)
+
+        photoButton = findViewById(R.id.receiptPhotoCard)
+        photoPreview = findViewById(R.id.add_photoPreview)
     }
 
     private fun loadDropdownData() {
@@ -123,6 +166,7 @@ class AddTransactionActivity : AppCompatActivity() {
 
         saveButton.setOnClickListener { saveTransaction(shouldFinish = true) }
         saveContinueButton.setOnClickListener { saveTransaction(shouldFinish = false) }
+        photoButton.setOnClickListener { showPhotoOptions() }
     }
 
     private fun updateTypeButtonStyles() {
@@ -224,7 +268,8 @@ class AddTransactionActivity : AppCompatActivity() {
             accountId = selectedAccountId!!,
             categoryId = selectedCategoryId!!,
             memberId = selectedMemberId!!,
-            photo = false
+            photo = photoPath != null,
+            photoPath = photoPath
         )
 
         Thread {
@@ -256,7 +301,71 @@ class AddTransactionActivity : AppCompatActivity() {
         selectedMemberId = null
         selectedType = "expense"
         selectedDate = Calendar.getInstance()
+        photoPath = null
+        pendingPhotoUri = null
+        photoPreview.visibility = View.GONE
+        photoPreview.setImageURI(null)
         updateTypeButtonStyles()
         updateDateText()
     }
+
+    private fun showPhotoOptions() {
+        AlertDialog.Builder(this)
+            .setTitle("Add Photo")
+            .setItems(arrayOf("Take Photo", "Choose from Gallery")) { _, which ->
+                when (which) {
+                    0 -> takePhoto()    // user chose camera
+                    1 -> pickFromGallery() // user chose gallery
+                }
+            }.show()
+    }
+
+
+
+    private fun takePhoto() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+            == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            // Permission already granted, open camera
+            val photoFile = createImageFile()
+            photoPath = photoFile.absolutePath
+            val uri = FileProvider.getUriForFile(this, "${packageName}.provider", photoFile)
+            pendingPhotoUri = uri
+            takePictureLauncher.launch(uri)
+        } else {
+            // Ask the user for permission first
+            requestCameraPermission.launch(android.Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun pickFromGallery() {
+        pickImageLauncher.launch("image/*") // "image/*" means any image type
+    }
+
+    private fun createImageFile(): File {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile("IMG_${timestamp}_", ".jpg", storageDir)
+    }
+
+    private fun copyUriToFile(uri: Uri): File {
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val file = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "IMG_$timestamp.jpg")
+        contentResolver.openInputStream(uri)?.use { input ->
+            file.outputStream().use { output -> input.copyTo(output) }
+        }
+        return file
+    }
+
+
+    private val requestCameraPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            takePhoto() // permission granted, open camera
+        } else {
+            Toast.makeText(this, "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
+
+
