@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CategoryStatAdapter(private val categories: List<ReportsActivity.CategoryStat>) :
-    RecyclerView.Adapter<CategoryStatAdapter.ViewHolder>() {
+class CategoryStatAdapter(private val categories: List<CategoryStat>) :
+    RecyclerView.Adapter<CategoryStatAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -26,10 +26,10 @@ class CategoryStatAdapter(private val categories: List<ReportsActivity.CategoryS
         private val categoryAmount: TextView = itemView.findViewById(R.id.categoryAmount)
         private val categoryRatio: TextView = itemView.findViewById(R.id.categoryRatio)
 
-        fun bind(category: ReportsActivity.CategoryStat) {
+        fun bind(category: CategoryStat) {
             categoryRank.text = category.rank
             categoryName.text = category.name
-            categoryAmount.text = category.amount
+            categoryAmount.text = "R %.2f".format(category.amount)
             categoryRatio.text = category.ratio
         }
     }

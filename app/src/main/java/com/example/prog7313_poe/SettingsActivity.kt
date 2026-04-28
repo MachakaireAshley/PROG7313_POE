@@ -81,20 +81,41 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showBudgetDialog() {
-        val input = EditText(this)
-        input.hint = "Monthly budget (ZAR)"
-        val current = prefs.getFloat("monthly_budget", 5000f)
-        input.setText(current.toInt().toString())
+        val layout = android.widget.LinearLayout(this)
+        layout.orientation = android.widget.LinearLayout.VERTICAL
+        layout.setPadding(50, 20, 50, 10)
+
+        val minInput = EditText(this)
+        minInput.hint = "Minimum budget (ZAR)"
+
+        val maxInput = EditText(this)
+        maxInput.hint = "Maximum budget (ZAR)"
+
+        val currentMin = prefs.getFloat("min_budget", 0f)
+        val currentMax = prefs.getFloat("max_budget", 5000f)
+
+        minInput.setText(currentMin.toInt().toString())
+        maxInput.setText(currentMax.toInt().toString())
+
+        layout.addView(minInput)
+        layout.addView(maxInput)
+
         AlertDialog.Builder(this)
-            .setTitle("Set Monthly Budget")
-            .setView(input)
+            .setTitle("Set Budget Range")
+            .setView(layout)
             .setPositiveButton("Save") { _, _ ->
-                val value = input.text.toString().toDoubleOrNull()
-                if (value != null) {
-                    prefs.edit().putFloat("monthly_budget", value.toFloat()).apply()
-                    Toast.makeText(this, "Budget updated", Toast.LENGTH_SHORT).show()
+                val min = minInput.text.toString().toDoubleOrNull()
+                val max = maxInput.text.toString().toDoubleOrNull()
+
+                if (min != null && max != null && min <= max) {
+                    prefs.edit()
+                        .putFloat("min_budget", min.toFloat())
+                        .putFloat("max_budget", max.toFloat())
+                        .apply()
+
+                    Toast.makeText(this, "Budget range updated", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Invalid amount", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Invalid values", Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton("Cancel", null)

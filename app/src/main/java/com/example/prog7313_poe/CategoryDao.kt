@@ -16,4 +16,10 @@ interface CategoryDao
 
     @Query("DELETE FROM category_table WHERE id = :id")
     fun deleteById(id: Int)
+
+    @Query("SELECT * FROM category_table WHERE id = :id LIMIT 1")
+    fun getById(id: Int): Category?
+
+    @Query("SELECT name FROM category_table WHERE id = :id LIMIT 1")
+    fun getNameById(id: Int): String?
 }
