@@ -2,6 +2,7 @@ package com.example.prog7313_poe
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -40,11 +41,21 @@ class AddTransactionActivity : AppCompatActivity() {
     private lateinit var photoButton: View
     private lateinit var photoPreview: ImageView
 
+    // Start and End Time views
+    private lateinit var startTimeText: TextView
+    private lateinit var endTimeText: TextView
+    private lateinit var startTimeButton: ImageButton
+    private lateinit var endTimeButton: ImageButton
+
     private var selectedType = "expense"
     private var selectedDate = Calendar.getInstance()
     private var selectedCategoryId: Int? = null
     private var selectedAccountId: Int? = null
     private var selectedMemberId: Int? = null
+
+
+    private var selectedStartTime: Date = Date()  // Initialize with current date/time
+    private var selectedEndTime: Date = Date()    // Initialize with current date/time
 
     private lateinit var db: AppDatabase
     private var categories = listOf<Category>()
@@ -54,6 +65,10 @@ class AddTransactionActivity : AppCompatActivity() {
     //photo variables
     private var pendingPhotoUri: Uri? = null
     private var photoPath: String? = null
+
+    // Flag to track if user has actually selected a time
+    private var isStartTimeSelected = false
+    private var isEndTimeSelected = false
 
     //taking a photo
     private val takePictureLauncher = registerForActivityResult(
@@ -88,6 +103,8 @@ class AddTransactionActivity : AppCompatActivity() {
         initViews()
         setupClickListeners()
         setupDatePicker()
+
+        setupTimePickers()
         loadDropdownData()
         updateTypeButtonStyles()
     }
@@ -113,6 +130,75 @@ class AddTransactionActivity : AppCompatActivity() {
 
         photoButton = findViewById(R.id.receiptPhotoCard)
         photoPreview = findViewById(R.id.add_photoPreview)
+
+        // NEW: Initialize time views
+        startTimeText = findViewById(R.id.add_startTimeText)
+        endTimeText = findViewById(R.id.add_endTimeText)
+        startTimeButton = findViewById(R.id.add_startTimeButton)
+        endTimeButton = findViewById(R.id.add_endTimeButton)
+    }
+
+   //Setup time pickers
+    private fun setupTimePickers() {
+        updateStartTimeText()
+        updateEndTimeText()
+
+        startTimeButton.setOnClickListener {
+            showTimePicker(isStartTime = true)
+        }
+
+        endTimeButton.setOnClickListener {
+            showTimePicker(isStartTime = false)
+        }
+    }
+
+    // Show time picker dialog
+    private fun showTimePicker(isStartTime: Boolean) {
+        val calendar = Calendar.getInstance()
+
+        // Use existing time if available
+        if (isStartTime && isStartTimeSelected) {
+            calendar.time = selectedStartTime
+        } else if (!isStartTime && isEndTimeSelected) {
+            calendar.time = selectedEndTime
+        }
+
+        TimePickerDialog(
+            this,
+            { _, hourOfDay, minute ->
+                val timeCalendar = Calendar.getInstance()
+                // Use the selected date as base
+                timeCalendar.set(selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH), selectedDate.get(Calendar.DAY_OF_MONTH))
+                timeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                timeCalendar.set(Calendar.MINUTE, minute)
+                timeCalendar.set(Calendar.SECOND, 0)
+
+                if (isStartTime) {
+                    selectedStartTime = timeCalendar.time
+                    isStartTimeSelected = true
+                    updateStartTimeText()
+                } else {
+                    selectedEndTime = timeCalendar.time
+                    isEndTimeSelected = true
+                    updateEndTimeText()
+                }
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true
+        ).show()
+    }
+
+    // Update start time text
+    private fun updateStartTimeText() {
+        val format = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        startTimeText.text = if (isStartTimeSelected) format.format(selectedStartTime) else "Select time"
+    }
+
+    // Update end time text
+    private fun updateEndTimeText() {
+        val format = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        endTimeText.text = if (isEndTimeSelected) format.format(selectedEndTime) else "Select time"
     }
 
     private fun loadDropdownData() {
@@ -260,6 +346,19 @@ class AddTransactionActivity : AppCompatActivity() {
         }
 
         val amount = amountStr.toDoubleOrNull() ?: 0.0
+
+        // Create a calendar instance to combine date and time for start time
+        val startCalendar = Calendar.getInstance()
+        startCalendar.time = selectedStartTime
+        startCalendar.set(selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH), selectedDate.get(Calendar.DAY_OF_MONTH))
+        val finalStartTime = startCalendar.time
+
+        // Create a calendar instance to combine date and time for end time
+        val endCalendar = Calendar.getInstance()
+        endCalendar.time = selectedEndTime
+        endCalendar.set(selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH), selectedDate.get(Calendar.DAY_OF_MONTH))
+        val finalEndTime = endCalendar.time
+
         val transaction = Transaction(
             name = memoInput.text.toString().ifEmpty { "Transaction" },
             amount = amount,
@@ -269,7 +368,9 @@ class AddTransactionActivity : AppCompatActivity() {
             categoryId = selectedCategoryId!!,
             memberId = selectedMemberId!!,
             photo = photoPath != null,
-            photoPath = photoPath
+            photoPath = photoPath,
+            startTime = finalStartTime,
+            endTime = finalEndTime
         )
 
         Thread {
@@ -301,12 +402,20 @@ class AddTransactionActivity : AppCompatActivity() {
         selectedMemberId = null
         selectedType = "expense"
         selectedDate = Calendar.getInstance()
+        //Reset time values
+        selectedStartTime = Date()
+        selectedEndTime = Date()
+        isStartTimeSelected = false
+        isEndTimeSelected = false
         photoPath = null
         pendingPhotoUri = null
         photoPreview.visibility = View.GONE
         photoPreview.setImageURI(null)
         updateTypeButtonStyles()
         updateDateText()
+        //Update time texts
+        updateStartTimeText()
+        updateEndTimeText()
     }
 
     private fun showPhotoOptions() {
@@ -367,5 +476,3 @@ class AddTransactionActivity : AppCompatActivity() {
         }
     }
 }
-
-
