@@ -1,14 +1,17 @@
 package com.example.prog7313_poe
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeListActivity : AppCompatActivity() {
@@ -25,6 +28,18 @@ class HomeListActivity : AppCompatActivity() {
     private lateinit var db: AppDatabase
     private lateinit var prefs: SharedPreferences
 
+    // Date range views
+    private lateinit var fromDateText: TextView
+    private lateinit var toDateText: TextView
+    private lateinit var fromDateCard: CardView
+    private lateinit var toDateCard: CardView
+
+    // Date variables
+    private var startDate: Date = Date()
+    private var endDate: Date = Date()
+    private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+    private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_list)
@@ -34,6 +49,10 @@ class HomeListActivity : AppCompatActivity() {
         initViews()
         setupBottomNav()
         setupToggleButtons()
+        setupDateRangeSelector()
+
+        // Initialize with current month
+        initializeDefaultDateRange()
     }
 
     override fun onResume() {
@@ -51,6 +70,12 @@ class HomeListActivity : AppCompatActivity() {
         budgetProgress = findViewById(R.id.budgetProgress)
         transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView)
         bottomNav = findViewById(R.id.bottomNavigationView)
+
+        // Date range views
+        fromDateText = findViewById(R.id.fromDateText)
+        toDateText = findViewById(R.id.toDateText)
+        fromDateCard = findViewById(R.id.fromDateCard)
+        toDateCard = findViewById(R.id.toDateCard)
 
         transactionsRecyclerView.layoutManager = LinearLayoutManager(this)
     }
@@ -94,23 +119,83 @@ class HomeListActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupDateRangeSelector() {
+        fromDateCard.setOnClickListener {
+            showDatePickerDialog(true)
+        }
+
+        toDateCard.setOnClickListener {
+            showDatePickerDialog(false)
+        }
+    }
+
+    private fun initializeDefaultDateRange() {
+        val now = Date()
+        startDate = getStartOfMonth(now)
+        endDate = getEndOfMonth(now)
+        updateDateRangeDisplay()
+    }
+
+    private fun showDatePickerDialog(isFromDate: Boolean) {
+        val calendar = Calendar.getInstance()
+        val currentDate = if (isFromDate) startDate else endDate
+        calendar.time = currentDate
+
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                val selectedCalendar = Calendar.getInstance()
+                selectedCalendar.set(year, month, dayOfMonth)
+
+                if (isFromDate) {
+                    val newStartDate = selectedCalendar.time
+                    if (newStartDate.after(endDate)) {
+                        Toast.makeText(this, "Start date cannot be after end date", Toast.LENGTH_SHORT).show()
+                    } else {
+                        startDate = newStartDate
+                        updateDateRangeDisplay()
+                        loadData()
+                    }
+                } else {
+                    val newEndDate = selectedCalendar.time
+                    if (newEndDate.before(startDate)) {
+                        Toast.makeText(this, "End date cannot be before start date", Toast.LENGTH_SHORT).show()
+                    } else {
+                        endDate = newEndDate
+                        updateDateRangeDisplay()
+                        loadData()
+                    }
+                }
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
+    }
+
+    private fun updateDateRangeDisplay() {
+        fromDateText.text = dateFormat.format(startDate)
+        toDateText.text = dateFormat.format(endDate)
+    }
+
     private fun loadData() {
         Thread {
-            val now = Date()
-            val startOfMonth = getStartOfMonth(now)
-            val endOfMonth = getEndOfMonth(now)
-
-            val incomes = db.transactionDao().getByTypeBetweenDates("income", startOfMonth, endOfMonth)
-            val expenses = db.transactionDao().getByTypeBetweenDates("expense", startOfMonth, endOfMonth)
+            // Use the selected date range instead of current month
+            val incomes = db.transactionDao().getByTypeBetweenDates("income", startDate, endDate)
+            val expenses = db.transactionDao().getByTypeBetweenDates("expense", startDate, endDate)
             val totalIncome = incomes.sumOf { it.amount }
             val totalExpense = expenses.sumOf { it.amount }
             val net = totalIncome - totalExpense
 
-            val all = db.transactionDao().getBetweenDates(startOfMonth, endOfMonth)
+            val all = db.transactionDao().getBetweenDates(startDate, endDate)
             val recent = all.sortedByDescending { it.date }.take(10)
 
             val budgetLimit = prefs.getFloat("monthly_budget", 5000f).toDouble()
             val percentage = if (budgetLimit > 0) ((totalExpense / budgetLimit) * 100).toInt() else 0
+
+            // Calculate remaining budget (budgetLimit - expense for selected period)
+            val remainingBudget = budgetLimit - totalExpense
 
             runOnUiThread {
                 incomeAmount.text = "R %.2f".format(totalIncome)
@@ -118,7 +203,7 @@ class HomeListActivity : AppCompatActivity() {
                 totalAmount.text = "R %.2f".format(net)
                 budgetPercentage.text = "$percentage%"
                 budgetExpense.text = "R %.2f".format(totalExpense)
-                budgetLeft.text = "R %.2f".format(budgetLimit - totalExpense)
+                budgetLeft.text = "R %.2f".format(remainingBudget)
                 budgetProgress.progress = percentage.coerceIn(0, 100)
 
                 val adapter = TransactionAdapter(recent)
