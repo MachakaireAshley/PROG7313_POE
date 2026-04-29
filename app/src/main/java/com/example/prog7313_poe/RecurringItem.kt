@@ -8,6 +8,7 @@ import java.util.Date
 data class RecurringItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    val userId: String,
     val title: String,
     val amount: Double,
     val categoryId: Int,

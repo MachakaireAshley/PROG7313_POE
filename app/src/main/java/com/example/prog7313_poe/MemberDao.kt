@@ -6,14 +6,19 @@ import androidx.room.Query
 
 
 @Dao
-interface MemberDao
-{
+interface MemberDao {
     @Insert
     fun insert(member: Member)
 
-    @Query("SELECT * FROM member_table")
-    fun getAll(): List<Member>
 
-    @Query("DELETE FROM member_table WHERE id = :id")
-    fun deleteById(id: Int)
+    @Query("SELECT * FROM member_table WHERE userId = :userId")
+    fun getAll(userId: String): List<Member>
+
+
+    @Query("SELECT id FROM member_table WHERE userId = :userId")
+    fun getMemberIdsByUserId(userId: String): List<Int>
+
+
+    @Query("DELETE FROM member_table WHERE id = :id AND userId = :userId")
+    fun deleteById(id: Int, userId: String)
 }

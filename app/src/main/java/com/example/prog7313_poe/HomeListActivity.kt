@@ -180,15 +180,16 @@ class HomeListActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
+        val userId= UserSession.userId
         Thread {
             // Use the selected date range instead of current month
-            val incomes = db.transactionDao().getByTypeBetweenDates("income", startDate, endDate)
-            val expenses = db.transactionDao().getByTypeBetweenDates("expense", startDate, endDate)
+            val incomes = db.transactionDao().getByTypeBetweenDates(userId,"income", startDate, endDate)
+            val expenses = db.transactionDao().getByTypeBetweenDates(userId,"expense", startDate, endDate)
             val totalIncome = incomes.sumOf { it.amount }
             val totalExpense = expenses.sumOf { it.amount }
             val net = totalIncome - totalExpense
 
-            val all = db.transactionDao().getBetweenDates(startDate, endDate)
+            val all = db.transactionDao().getBetweenDates(userId,startDate, endDate)
             val recent = all.sortedByDescending { it.date }.take(10)
 
             val budgetLimit = prefs.getFloat("monthly_budget", 5000f).toDouble()

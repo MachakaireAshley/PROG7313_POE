@@ -210,11 +210,12 @@ class AddTransactionActivity : AppCompatActivity() {
         accountArrow.isEnabled = false
         memberArrow.isEnabled = false
 
+        val userId = UserSession.userId
 
         Thread {
-            categories = db.categoryDao().getAll()
-            accounts = db.accountDao().getAll()
-            members = db.memberDao().getAll()
+            categories = db.categoryDao().getAll(userId)
+            accounts = db.accountDao().getAll(userId)
+            members = db.memberDao().getAll(userId)
 
             runOnUiThread {
                 categoryCard.isEnabled = true
@@ -359,6 +360,8 @@ class AddTransactionActivity : AppCompatActivity() {
         endCalendar.set(selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH), selectedDate.get(Calendar.DAY_OF_MONTH))
         val finalEndTime = endCalendar.time
 
+        val userId = UserSession.userId
+
         val transaction = Transaction(
             name = memoInput.text.toString().ifEmpty { "Transaction" },
             amount = amount,
@@ -377,7 +380,7 @@ class AddTransactionActivity : AppCompatActivity() {
             db.transactionDao().insert(transaction)
 
             //update the account balance when a transaction is added
-            val account = db.accountDao().getById(selectedAccountId!!)
+            val account = db.accountDao().getById(selectedAccountId!!,userId)
             if (account != null) {
                 val updatedAmount = when (selectedType) {
                     "income" -> account.amount + amount

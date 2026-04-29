@@ -192,11 +192,14 @@ class ReportsActivity : AppCompatActivity() {
 
 
     private fun loadReportData() {
+
+        val userId = UserSession.userId
+
         Thread {
             val start = startDate.time
             val end = endDate.time
 
-            val expenses = db.transactionDao().getByTypeBetweenDates("expense", start, end)
+            val expenses = db.transactionDao().getByTypeBetweenDates(userId,"expense", start, end)
             val total = expenses.sumOf { it.amount }
 
             // Handle empty state early
@@ -216,7 +219,7 @@ class ReportsActivity : AppCompatActivity() {
             }
 
             // Get all categories once (efficient)
-            val categoryMap = db.categoryDao().getAll().associateBy { it.id }
+            val categoryMap = db.categoryDao().getAll(userId).associateBy { it.id }
 
             val grouped = expenses.groupBy { it.categoryId }
             val categoryTotals = mutableListOf<CategoryStat>()
@@ -227,7 +230,7 @@ class ReportsActivity : AppCompatActivity() {
 
                 var categoryName = categoryMap[catId]?.name
                 if (categoryName == null) {
-                    categoryName = db.categoryDao().getNameById(catId) ?: "Unknown"
+                    categoryName = db.categoryDao().getNameById(catId,userId) ?: "Unknown"
                 }
                 categoryTotals.add(
                     CategoryStat(

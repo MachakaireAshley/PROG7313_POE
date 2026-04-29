@@ -35,8 +35,10 @@ class CategoryActivity : AppCompatActivity() {
     }
 
     private fun loadCategories() {
+        val userId = UserSession.userId // 👈 ADD THIS
+
         Thread {
-            val list = db.categoryDao().getAll()
+            val list = db.categoryDao().getAll(userId)
             runOnUiThread {
                 adapter = CategoryAdapter(list) { category ->
                     Toast.makeText(this, "Selected: ${category.name}", Toast.LENGTH_SHORT).show()
@@ -55,7 +57,7 @@ class CategoryActivity : AppCompatActivity() {
             .setPositiveButton("Add") { _, _ ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
-                    val category = Category(name = name, percentage = 0)
+                    val category = Category( userId = UserSession.userId,name = name, percentage = 0)
                     Thread {
                         db.categoryDao().insert(category)
                         runOnUiThread { loadCategories() }

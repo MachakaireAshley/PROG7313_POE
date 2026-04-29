@@ -97,7 +97,7 @@ class AccountsActivity : AppCompatActivity() {
             val amountStr = amountInput.text.toString().trim()
             if (name.isNotEmpty() && amountStr.isNotEmpty()) {
                 val amount = amountStr.toDoubleOrNull() ?: 0.0
-                val account = Account(accountName = name, amount = amount)
+                val account = Account(userId = UserSession.userId,accountName = name, amount = amount)
                 Thread {
                     db.accountDao().insert(account)
                     runOnUiThread {
@@ -115,8 +115,9 @@ class AccountsActivity : AppCompatActivity() {
     }
 
     private fun loadAccounts() {
+        val userId = UserSession.userId
         Thread {
-            val accounts = db.accountDao().getAll()
+            val accounts = db.accountDao().getAll(userId)
             runOnUiThread {
                 accountAdapter.updateData(accounts)
             }
@@ -124,16 +125,17 @@ class AccountsActivity : AppCompatActivity() {
     }
 
     private fun loadSummary() {
+        val userId = UserSession.userId
         Thread {
             val now = java.util.Date()
             val start = getStartOfMonth(now)
             val end = getEndOfMonth(now)
-            val incomes = db.transactionDao().getByTypeBetweenDates("income", start, end)
-            val expenses = db.transactionDao().getByTypeBetweenDates("expense", start, end)
+            val incomes = db.transactionDao().getByTypeBetweenDates(userId,"income", start, end)
+            val expenses = db.transactionDao().getByTypeBetweenDates(userId,"expense", start, end)
             val totalIncome = incomes.sumOf { it.amount }
             val totalExpense = expenses.sumOf { it.amount }
             //sum of all money within all accounts
-            val accounts = db.accountDao().getAll()
+            val accounts = db.accountDao().getAll(userId)
             val netAssets = accounts.sumOf { it.amount }
 
             runOnUiThread {

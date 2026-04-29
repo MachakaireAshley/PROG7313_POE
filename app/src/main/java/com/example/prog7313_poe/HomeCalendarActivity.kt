@@ -94,6 +94,8 @@ class HomeCalendarActivity : AppCompatActivity() {
 
 
         Thread {
+
+            val userId= UserSession.userId
             val cal = java.util.Calendar.getInstance()
 
             // Start of selected day
@@ -106,8 +108,8 @@ class HomeCalendarActivity : AppCompatActivity() {
             cal.set(java.util.Calendar.MILLISECOND, 999)
             val endOfDay = cal.time
 
-            val incomes = db.transactionDao().getByTypeBetweenDates("income", startOfDay, endOfDay)
-            val expenses = db.transactionDao().getByTypeBetweenDates("expense", startOfDay, endOfDay)
+            val incomes = db.transactionDao().getByTypeBetweenDates(userId,"income", startOfDay, endOfDay)
+            val expenses = db.transactionDao().getByTypeBetweenDates(userId,"expense", startOfDay, endOfDay)
 
             val totalIncome = incomes.sumOf { it.amount }
             val totalExpense = expenses.sumOf { it.amount }

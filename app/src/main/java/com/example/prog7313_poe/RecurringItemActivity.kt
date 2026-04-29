@@ -34,12 +34,14 @@ class RecurringItemActivity : AppCompatActivity() {
     }
 
     private fun loadItems() {
+        val userId = UserSession.userId
+
         Thread {
-            val items = db.recurringItemDao().getAll()
+            val items = db.recurringItemDao().getAll(userId)
             runOnUiThread {
                 adapter = RecurringItemAdapter(items) { item, delete ->
                     if (delete) {
-                        Thread { db.recurringItemDao().deleteById(item.id) }.start()
+                        Thread { db.recurringItemDao().deleteById(item.id,userId) }.start()
                         loadItems()
                     } else {
                         Toast.makeText(this, "Detail: ${item.title}", Toast.LENGTH_SHORT).show()
@@ -61,7 +63,7 @@ class RecurringItemActivity : AppCompatActivity() {
 
         // load categories into spinner
         Thread {
-            val categories = db.categoryDao().getAll()
+            val categories = db.categoryDao().getAll(UserSession.userId)
             val names = categories.map { it.name }
             runOnUiThread {
                 val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, names)
@@ -87,8 +89,10 @@ class RecurringItemActivity : AppCompatActivity() {
                 val startDate = parseDate(startDateInput.text.toString())
                 if (name.isNotEmpty() && amount > 0 && startDate != null) {
                     Thread {
-                        val catId = db.categoryDao().getAll()[categoryPos].id
+                        val userId = UserSession.userId
+                        val catId = db.categoryDao().getAll(userId)[categoryPos].id
                         val item = RecurringItem(
+                            userId=userId,
                             title = name,
                             amount = amount,
                             categoryId = catId,

@@ -35,8 +35,11 @@ class MemberActivity : AppCompatActivity() {
     }
 
     private fun loadMembers() {
+
+        val userId= UserSession.userId
+
         Thread {
-            val list = db.memberDao().getAll()
+            val list = db.memberDao().getAll(userId)
             runOnUiThread {
                 adapter = MemberAdapter(list)
                 membersRecyclerView.adapter = adapter
@@ -45,6 +48,7 @@ class MemberActivity : AppCompatActivity() {
     }
 
     private fun showAddMemberDialog() {
+        val userId= UserSession.userId
         val input = EditText(this)
         input.hint = "Member name"
         AlertDialog.Builder(this)
@@ -53,7 +57,7 @@ class MemberActivity : AppCompatActivity() {
             .setPositiveButton("Add") { _, _ ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
-                    val member = Member(name = name)
+                    val member = Member(0,userId,name = name)
                     Thread {
                         db.memberDao().insert(member)
                         runOnUiThread { loadMembers() }
