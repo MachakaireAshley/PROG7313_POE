@@ -380,14 +380,14 @@ class AddTransactionActivity : AppCompatActivity() {
             db.transactionDao().insert(transaction)
 
             //update the account balance when a transaction is added
-            val account = db.accountDao().getById(selectedAccountId!!,userId)
+            val account = db.accountDao().getByIdSync(selectedAccountId!!,userId)
             if (account != null) {
                 val updatedAmount = when (selectedType) {
                     "income" -> account.amount + amount
                     "expense" -> account.amount - amount
                     else -> account.amount
                 }
-                db.accountDao().update(account.copy(amount = updatedAmount))
+                db.accountDao().updateSync(account.copy(amount = updatedAmount))
             }
 
             runOnUiThread {

@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
-
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.launch
 class AccountsActivity : AppCompatActivity() {
 
     private lateinit var netAssetsAmount: TextView
@@ -22,12 +25,25 @@ class AccountsActivity : AppCompatActivity() {
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var accountAdapter: AccountAdapter
     private lateinit var db: AppDatabase
+    private lateinit var accountRepo: AccountRepo
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_accounts)
 
         db = AppDatabase.getDatabase(this)
+        val currentUserId= FirebaseAuth.getInstance().currentUser?.uid
+        if(currentUserId==null){
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            // Redirect to login
+            return
+        }
+
+        val accountDao= db.accountDao()
+        accountRepo= AccountRepo(accountDao, currentUserId)
+        accountRepo.listenForCloudChanges()
+
         initViews()
         setupBottomNav()
         setupAddButton()
@@ -97,15 +113,46 @@ class AccountsActivity : AppCompatActivity() {
             val amountStr = amountInput.text.toString().trim()
             if (name.isNotEmpty() && amountStr.isNotEmpty()) {
                 val amount = amountStr.toDoubleOrNull() ?: 0.0
-                val account = Account(userId = UserSession.userId,accountName = name, amount = amount)
-                Thread {
-                    db.accountDao().insert(account)
-                    runOnUiThread {
-                        loadAccounts()
-                        loadSummary()
-                        Toast.makeText(this, "Account added", Toast.LENGTH_SHORT).show()
+                val currentUserId= FirebaseAuth.getInstance().currentUser?.uid?: ""
+//                val account = Account(userId = UserSession.userId,accountName = name, amount = amount)
+//                Thread {
+//                    db.accountDao().insert(account)
+//                    runOnUiThread {
+//                        loadAccounts()
+//                        loadSummary()
+//                        Toast.makeText(this, "Account added", Toast.LENGTH_SHORT).show()
+//                    }
+//                }.start()
+
+
+//                lifecycleScope.launch {
+//                    val account= Account(
+//                        userId = currentUserId,
+//                        accountName = name,
+//                        amount = amount,
+//                        lastUpdated = 0
+//                    )
+//                    accountRepo.saveAccount(account)
+//                    Toast.makeText(this@AccountsActivity, "Account Added", Toast.LENGTH_SHORT).show()
+//                }
+
+                lifecycleScope.launch {
+                    try {
+                        val account = Account(
+                            userId = currentUserId,
+                            accountName = name,
+                            amount = amount,
+                            lastUpdated = 0
+                        )
+                        accountRepo.saveAccount(account)
+                        Toast.makeText(this@AccountsActivity, "Account Added", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        android.util.Log.e("AccountsActivity", "Error saving account", e)
+                        Toast.makeText(this@AccountsActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
-                }.start()
+                }
+
+
             } else {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             }
@@ -115,17 +162,16 @@ class AccountsActivity : AppCompatActivity() {
     }
 
     private fun loadAccounts() {
-        val userId = UserSession.userId
-        Thread {
-            val accounts = db.accountDao().getAll(userId)
-            runOnUiThread {
-                accountAdapter.updateData(accounts)
+        lifecycleScope.launch {
+            accountRepo.getAccounts().collect {
+                accounts-> accountAdapter.updateData(accounts)
+                loadSummary()
             }
-        }.start()
+        }
     }
 
     private fun loadSummary() {
-        val userId = UserSession.userId
+        val userId = FirebaseAuth.getInstance().currentUser?.uid?: return
         Thread {
             val now = java.util.Date()
             val start = getStartOfMonth(now)

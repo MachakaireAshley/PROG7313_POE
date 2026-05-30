@@ -5,21 +5,31 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountDao {
     @Insert
-    fun insert(account: Account)
+    suspend fun insert(account: Account): Long
 
     @Query("SELECT * FROM account_table WHERE userId = :userId")
-    fun getAll(userId: String): List<Account>
+         fun getAll(userId: String): List<Account>
+
+    @Query("SELECT * FROM account_table WHERE userId = :userId ORDER BY accountName ASC")
+    fun getAccountsByUser(userId: String): Flow<List<Account>>
 
     @Query("SELECT * FROM account_table WHERE id = :id AND userId = :userId LIMIT 1")
-    fun getById(id: Int, userId: String): Account?
+   suspend fun getById(id: Int, userId: String): Account?
+
+    @Query("SELECT * FROM account_table WHERE id = :id AND userId = :userId LIMIT 1")
+    fun getByIdSync(id: Int, userId: String): Account?
 
     @Query("DELETE FROM account_table WHERE id = :id AND userId = :userId")
-    fun deleteById(id: Int, userId: String)
+   suspend fun deleteById(id: Int, userId: String)
 
     @Update
-    fun update(account: Account)
+    suspend fun update(account: Account)
+
+    @Update
+    fun updateSync(account: Account)
 }
