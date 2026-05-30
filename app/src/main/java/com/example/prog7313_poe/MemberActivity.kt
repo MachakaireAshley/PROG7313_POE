@@ -7,8 +7,11 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 class MemberActivity : AppCompatActivity() {
 
@@ -17,11 +20,23 @@ class MemberActivity : AppCompatActivity() {
     private lateinit var membersRecyclerView: RecyclerView
     private lateinit var db: AppDatabase
     private lateinit var adapter: MemberAdapter
+    private lateinit var memberRepo: MemberRepo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_member)
         db = AppDatabase.getDatabase(this)
+
+        val currentUserId= FirebaseAuth.getInstance().currentUser?.uid
+        if(currentUserId==null){
+            Toast.makeText(this, "User Not Logged In", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val memberDao= db.memberDao()
+        memberRepo= MemberRepo(memberDao, currentUserId)
+
+        memberRepo.listenForCloudChanges()
+
 
         backButton = findViewById(R.id.memberBackButton)
         addButton = findViewById(R.id.member_addButton)
@@ -48,7 +63,6 @@ class MemberActivity : AppCompatActivity() {
     }
 
     private fun showAddMemberDialog() {
-        val userId= UserSession.userId
         val input = EditText(this)
         input.hint = "Member name"
         AlertDialog.Builder(this)
@@ -57,11 +71,16 @@ class MemberActivity : AppCompatActivity() {
             .setPositiveButton("Add") { _, _ ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
-                    val member = Member(0,userId,name = name)
-                    Thread {
-                        db.memberDao().insert(member)
-                        runOnUiThread { loadMembers() }
-                    }.start()
+                    val currentUserId= FirebaseAuth.getInstance().currentUser?.uid?: ""
+                    lifecycleScope.launch {
+                        val member= Member(
+                            userId = currentUserId,
+                            name = name,
+                            lastUpdated = 0
+                        )
+                        memberRepo.saveMember(member)
+                        Toast.makeText(this@MemberActivity, "Member added", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             .setNegativeButton("Cancel", null)

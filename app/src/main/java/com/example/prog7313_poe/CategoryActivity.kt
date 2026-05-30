@@ -22,6 +22,7 @@ class CategoryActivity : AppCompatActivity() {
     private lateinit var adapter: CategoryAdapter
     private lateinit var categoryRepo: CategoryRepo
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
