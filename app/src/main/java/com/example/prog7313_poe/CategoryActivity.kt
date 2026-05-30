@@ -7,8 +7,11 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 class CategoryActivity : AppCompatActivity() {
 
@@ -17,11 +20,23 @@ class CategoryActivity : AppCompatActivity() {
     private lateinit var categoriesGrid: RecyclerView
     private lateinit var db: AppDatabase
     private lateinit var adapter: CategoryAdapter
+    private lateinit var categoryRepo: CategoryRepo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
         db = AppDatabase.getDatabase(this)
+
+        val currentUserId= FirebaseAuth.getInstance().currentUser?.uid
+        if(currentUserId==null){
+            Toast.makeText(this, "User Not Logged In", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val categoryDao= db.categoryDao()
+        categoryRepo= CategoryRepo(categoryDao, currentUserId)
+
+        categoryRepo.listenForCloudChanges()
 
         backButton = findViewById(R.id.categoryBackButton)
         addButton = findViewById(R.id.category_addBotton)
@@ -35,17 +50,16 @@ class CategoryActivity : AppCompatActivity() {
     }
 
     private fun loadCategories() {
-        val userId = UserSession.userId // 👈 ADD THIS
+        val userId = FirebaseAuth.getInstance().currentUser?.uid?: return // 👈 ADD THIS
 
-        Thread {
-            val list = db.categoryDao().getAll(userId)
-            runOnUiThread {
-                adapter = CategoryAdapter(list) { category ->
-                    Toast.makeText(this, "Selected: ${category.name}", Toast.LENGTH_SHORT).show()
-                }
-                categoriesGrid.adapter = adapter
-            }
-        }.start()
+       lifecycleScope.launch {
+           categoryRepo.getCategories().collect {
+               categories -> adapter= CategoryAdapter(categories){ category ->
+                   Toast.makeText(this@CategoryActivity, "Selected: ${category.name}", Toast.LENGTH_SHORT).show()
+           }
+               categoriesGrid.adapter=adapter
+           }
+       }
     }
 
     private fun showAddCategoryDialog() {
@@ -57,11 +71,17 @@ class CategoryActivity : AppCompatActivity() {
             .setPositiveButton("Add") { _, _ ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
-                    val category = Category( userId = UserSession.userId,name = name, percentage = 0)
-                    Thread {
-                        db.categoryDao().insert(category)
-                        runOnUiThread { loadCategories() }
-                    }.start()
+                    val currentUserId= FirebaseAuth.getInstance().currentUser?.uid?: ""
+                    lifecycleScope.launch {
+                        val category= Category(
+                            userId = currentUserId,
+                            name = name,
+                            percentage = 0,
+                            lastUpdated = 0
+                        )
+                        categoryRepo.saveCategory(category)
+                        Toast.makeText(this@CategoryActivity, "Category added", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             .setNegativeButton("Cancel", null)

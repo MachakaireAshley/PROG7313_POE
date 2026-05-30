@@ -17,26 +17,6 @@ class AccountRepo(private val accountDao: AccountDao, private val userId: String
     return accountDao.getAccountsByUser(userId)
     }
 
-//    suspend fun saveAccount(account: Account)
-//    {
-//        //timestamp
-//    val updatedAccount= account.copy(
-//        lastUpdated = System.currentTimeMillis()
-//    )
-//
-//        //saving to roomdb and then getting a generated id
-//        val generatedId= accountDao.insert(updatedAccount)
-//
-//        //create copy for firebase
-//        val accountForFirebase= updatedAccount.copy(id= generatedId.toInt())
-//
-//        //saving to firebase
-//        database.child(generatedId.toString()).setValue(accountForFirebase)
-//
-//    }
-
-
-
 
     suspend fun saveAccount(account: Account) {
         try {
