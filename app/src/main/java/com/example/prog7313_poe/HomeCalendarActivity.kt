@@ -7,6 +7,9 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 class HomeCalendarActivity : AppCompatActivity() {
 
@@ -17,11 +20,28 @@ class HomeCalendarActivity : AppCompatActivity() {
     private lateinit var calendarView: CalendarView
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var db: AppDatabase
+    private lateinit var transactionRepo: TransactionRepo
+    private lateinit var accountRepo: AccountRepo
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_calendar)
         db = AppDatabase.getDatabase(this)
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserId == null) {
+            finish()
+            return
+        }
+
+        val transactionDao = db.transactionDao()
+        val accountDao = db.accountDao()
+
+        transactionRepo = TransactionRepo(transactionDao, accountDao, db.categoryDao(), db.memberDao(), currentUserId)
+        accountRepo = AccountRepo(accountDao, currentUserId)
+
+        transactionRepo.listenForCloudChanges()
 
         initViews()
         setupBottomNav()
@@ -92,10 +112,9 @@ class HomeCalendarActivity : AppCompatActivity() {
 
     private fun updateDataForDate(year: Int, month: Int, day: Int) {
 
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        Thread {
-
-            val userId= UserSession.userId
+        lifecycleScope.launch {
             val cal = java.util.Calendar.getInstance()
 
             // Start of selected day
@@ -108,19 +127,17 @@ class HomeCalendarActivity : AppCompatActivity() {
             cal.set(java.util.Calendar.MILLISECOND, 999)
             val endOfDay = cal.time
 
-            val incomes = db.transactionDao().getByTypeBetweenDates(userId,"income", startOfDay, endOfDay)
-            val expenses = db.transactionDao().getByTypeBetweenDates(userId,"expense", startOfDay, endOfDay)
+            val incomes = transactionRepo.getTransactionsBetweenDates(currentUserId, startOfDay, endOfDay, "income")
+            val expenses = transactionRepo.getTransactionsBetweenDates(currentUserId, startOfDay, endOfDay, "expense")
 
             val totalIncome = incomes.sumOf { it.amount }
             val totalExpense = expenses.sumOf { it.amount }
             val net = totalIncome - totalExpense
 
-            runOnUiThread {
-                calendarIncome.text = "R %.2f".format(totalIncome)
-                calendarExpense.text = "R %.2f".format(totalExpense)
-                calendarTotal.text = "R %.2f".format(net)
-            }
-        }.start()
+            calendarIncome.text = "R %.2f".format(totalIncome)
+            calendarExpense.text = "R %.2f".format(totalExpense)
+            calendarTotal.text = "R %.2f".format(net)
+        }
     }
 
 

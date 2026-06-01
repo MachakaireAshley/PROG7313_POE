@@ -13,7 +13,7 @@ interface AccountDao {
     suspend fun insert(account: Account): Long
 
     @Query("SELECT * FROM account_table WHERE userId = :userId")
-         fun getAll(userId: String): List<Account>
+        suspend fun getAll(userId: String): List<Account>
 
     @Query("SELECT * FROM account_table WHERE userId = :userId ORDER BY accountName ASC")
     fun getAccountsByUser(userId: String): Flow<List<Account>>
@@ -32,4 +32,7 @@ interface AccountDao {
 
     @Update
     fun updateSync(account: Account)
+
+    @Query("UPDATE account_table SET amount = amount + :amountChange, lastUpdated = :timestamp WHERE id = :accountId AND userId = :userId")
+    suspend fun updateAccountAmount(accountId: Int, amountChange: Double, timestamp: Long, userId: String)
 }

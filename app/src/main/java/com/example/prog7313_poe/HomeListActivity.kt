@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 class HomeListActivity : AppCompatActivity() {
 
@@ -34,6 +37,10 @@ class HomeListActivity : AppCompatActivity() {
     private lateinit var fromDateCard: CardView
     private lateinit var toDateCard: CardView
 
+    //repo variables
+    private lateinit var transactionRepo: TransactionRepo
+    private lateinit var accountRepo: AccountRepo
+
     // Date variables
     private var startDate: Date = Date()
     private var endDate: Date = Date()
@@ -45,6 +52,21 @@ class HomeListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home_list)
         db = AppDatabase.getDatabase(this)
         prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserId == null) {
+            finish()
+            return
+        }
+
+        val transactionDao = db.transactionDao()
+        val accountDao = db.accountDao()
+
+        transactionRepo = TransactionRepo(transactionDao, accountDao, db.categoryDao(), db.memberDao(), currentUserId)
+        accountRepo = AccountRepo(accountDao, currentUserId)
+
+        transactionRepo.listenForCloudChanges()
+        accountRepo.listenForCloudChanges()
 
         initViews()
         setupBottomNav()
@@ -180,37 +202,36 @@ class HomeListActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
-        val userId= UserSession.userId
-        Thread {
-            // Use the selected date range instead of current month
-            val incomes = db.transactionDao().getByTypeBetweenDates(userId,"income", startDate, endDate)
-            val expenses = db.transactionDao().getByTypeBetweenDates(userId,"expense", startDate, endDate)
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        lifecycleScope.launch {
+            // Use the selected date range
+            val incomes = transactionRepo.getTransactionsBetweenDates(currentUserId, startDate, endDate, "income")
+            val expenses = transactionRepo.getTransactionsBetweenDates(currentUserId, startDate, endDate, "expense")
+            android.util.Log.d("HomeList", "Incomes count: ${incomes.size}")
+            android.util.Log.d("HomeList", "Expenses count: ${expenses.size}")
             val totalIncome = incomes.sumOf { it.amount }
             val totalExpense = expenses.sumOf { it.amount }
             val net = totalIncome - totalExpense
 
-            val all = db.transactionDao().getBetweenDates(userId,startDate, endDate)
-            val recent = all.sortedByDescending { it.date }.take(10)
+            val allTransactions = transactionRepo.getAllTransactions(currentUserId, startDate, endDate)
+            val recent = allTransactions.sortedByDescending { it.date }.take(10)
 
             val budgetLimit = prefs.getFloat("monthly_budget", 5000f).toDouble()
             val percentage = if (budgetLimit > 0) ((totalExpense / budgetLimit) * 100).toInt() else 0
-
-            // Calculate remaining budget (budgetLimit - expense for selected period)
             val remainingBudget = budgetLimit - totalExpense
 
-            runOnUiThread {
-                incomeAmount.text = "R %.2f".format(totalIncome)
-                expenseAmount.text = "R %.2f".format(totalExpense)
-                totalAmount.text = "R %.2f".format(net)
-                budgetPercentage.text = "$percentage%"
-                budgetExpense.text = "R %.2f".format(totalExpense)
-                budgetLeft.text = "R %.2f".format(remainingBudget)
-                budgetProgress.progress = percentage.coerceIn(0, 100)
+            incomeAmount.text = "R %.2f".format(totalIncome)
+            expenseAmount.text = "R %.2f".format(totalExpense)
+            totalAmount.text = "R %.2f".format(net)
+            budgetPercentage.text = "$percentage%"
+            budgetExpense.text = "R %.2f".format(totalExpense)
+            budgetLeft.text = "R %.2f".format(remainingBudget)
+            budgetProgress.progress = percentage.coerceIn(0, 100)
 
-                val adapter = TransactionAdapter(recent)
-                transactionsRecyclerView.adapter = adapter
-            }
-        }.start()
+            val adapter = TransactionAdapter(recent)
+            transactionsRecyclerView.adapter = adapter
+        }
     }
 
     private fun getStartOfMonth(date: Date): Date {

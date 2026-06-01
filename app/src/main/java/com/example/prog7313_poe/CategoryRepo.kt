@@ -17,6 +17,10 @@ private val database= FirebaseDatabase.getInstance()
         return categoryDao.getCategoriesByUser(userId)
     }
 
+    suspend fun getCategoriesList(): List<Category> {
+        return categoryDao.getAll(userId)
+    }
+
     suspend fun saveCategory(category: Category){
         val updatedCategory= category.copy(
             lastUpdated = System.currentTimeMillis()

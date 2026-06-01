@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 import kotlin.math.roundToInt
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 class ReportsActivity : AppCompatActivity() {
 
@@ -21,6 +24,11 @@ class ReportsActivity : AppCompatActivity() {
 
     private lateinit var fromDateText: TextView
     private lateinit var toDateText: TextView
+
+
+    //repo variables
+    private lateinit var transactionRepo: TransactionRepo
+    private lateinit var categoryRepo: CategoryRepo
 
 
     private lateinit var minGoalText: TextView
@@ -52,6 +60,24 @@ class ReportsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reports)
         db = AppDatabase.getDatabase(this)
+
+            //repo initialization and user
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserId == null) {
+            finish()
+            return
+        }
+
+        val transactionDao = db.transactionDao()
+        val accountDao = db.accountDao()
+
+        transactionRepo = TransactionRepo(transactionDao, accountDao, db.categoryDao(), db.memberDao(), currentUserId)
+        categoryRepo = CategoryRepo(db.categoryDao(), currentUserId)
+
+        transactionRepo.listenForCloudChanges()
+        categoryRepo.listenForCloudChanges()
+
+
 
         monthYearText = findViewById(R.id.monthYearText)
         totalExpenses = findViewById(R.id.totalExpenses)
@@ -192,34 +218,29 @@ class ReportsActivity : AppCompatActivity() {
 
 
     private fun loadReportData() {
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        val userId = UserSession.userId
-
-        Thread {
+        lifecycleScope.launch {
             val start = startDate.time
             val end = endDate.time
 
-            val expenses = db.transactionDao().getByTypeBetweenDates(userId,"expense", start, end)
+            val expenses = transactionRepo.getTransactionsBetweenDates(currentUserId, start, end, "expense")
             val total = expenses.sumOf { it.amount }
 
             // Handle empty state early
             if (expenses.isEmpty()) {
-                runOnUiThread {
-                    monthYearText.text =
-                        "${dateFormat.format(start)} - ${dateFormat.format(end)}"
-
-                    totalExpenses.text = "R 0.00"
-                    goalStatusText.text = "No expenses in this period"
-                    categoriesRecyclerView.adapter = CategoryStatAdapter(emptyList<CategoryStat>())
-
-                    minGoalText.text = "Min: R %.2f".format(min)
-                    maxGoalText.text = "Max: R %.2f".format(max)
-                }
-                return@Thread
+                monthYearText.text = "${dateFormat.format(start)} - ${dateFormat.format(end)}"
+                totalExpenses.text = "R 0.00"
+                goalStatusText.text = "No expenses in this period"
+                categoriesRecyclerView.adapter = CategoryStatAdapter(emptyList())
+                minGoalText.text = "Min: R %.2f".format(min)
+                maxGoalText.text = "Max: R %.2f".format(max)
+                return@launch
             }
 
-            // Get all categories once (efficient)
-            val categoryMap = db.categoryDao().getAll(userId).associateBy { it.id }
+            // Get all categories
+            val categories = categoryRepo.getCategoriesList()
+            val categoryMap = categories.associateBy { it.id }
 
             val grouped = expenses.groupBy { it.categoryId }
             val categoryTotals = mutableListOf<CategoryStat>()
@@ -230,14 +251,14 @@ class ReportsActivity : AppCompatActivity() {
 
                 var categoryName = categoryMap[catId]?.name
                 if (categoryName == null) {
-                    categoryName = db.categoryDao().getNameById(catId,userId) ?: "Unknown"
+                    categoryName = db.categoryDao().getNameById(catId, currentUserId) ?: "Unknown"
                 }
                 categoryTotals.add(
                     CategoryStat(
-                        "",
-                        categoryName,
-                        sum,
-                        "$percentage%"
+                        rank = "",
+                        name = categoryName,
+                        amount = sum,
+                        ratio = "$percentage%"
                     )
                 )
             }
@@ -250,24 +271,19 @@ class ReportsActivity : AppCompatActivity() {
                 item.copy(rank = (index + 1).toString())
             }
 
-            // Update UI safely
-            runOnUiThread {
-                monthYearText.text =
-                    "${dateFormat.format(start)} - ${dateFormat.format(end)}"
+            // Update UI
+            monthYearText.text = "${dateFormat.format(start)} - ${dateFormat.format(end)}"
+            totalExpenses.text = "R %.2f".format(total)
+            categoriesRecyclerView.adapter = CategoryStatAdapter(rankedList)
+            minGoalText.text = "Min: R %.2f".format(min)
+            maxGoalText.text = "Max: R %.2f".format(max)
 
-                totalExpenses.text = "R %.2f".format(total)
-                categoriesRecyclerView.adapter = CategoryStatAdapter(rankedList)
-
-                minGoalText.text = "Min: R %.2f".format(min)
-                maxGoalText.text = "Max: R %.2f".format(max)
-
-                goalStatusText.text = when {
-                    total < min -> "Below minimum spending"
-                    total > max -> "Above maximum spending"
-                    else -> "Within budget"
-                }
+            goalStatusText.text = when {
+                total < min -> "Below minimum spending"
+                total > max -> "Above maximum spending"
+                else -> "Within budget"
             }
-        }.start()
+        }
     }
 
     override fun onResume() {

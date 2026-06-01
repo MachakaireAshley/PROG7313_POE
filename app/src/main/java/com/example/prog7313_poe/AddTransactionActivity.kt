@@ -17,6 +17,12 @@ import android.os.Environment
 import androidx.core.content.FileProvider
 import java.io.File
 import java.text.SimpleDateFormat
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddTransactionActivity : AppCompatActivity() {
 
@@ -62,6 +68,12 @@ class AddTransactionActivity : AppCompatActivity() {
     private var accounts = listOf<Account>()
     private var members = listOf<Member>()
 
+    //Repo variables
+    private lateinit var transactionRepo: TransactionRepo
+    private lateinit var accountRepo: AccountRepo
+    private lateinit var categoryRepo: CategoryRepo
+    private lateinit var memberRepo: MemberRepo
+
     //photo variables
     private var pendingPhotoUri: Uri? = null
     private var photoPath: String? = null
@@ -100,10 +112,39 @@ class AddTransactionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_transaction)
         db = AppDatabase.getDatabase(this)
+
+        //get current user of app
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserId == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        //Dao Initialization
+        val accountDao = db.accountDao()
+        val categoryDao = db.categoryDao()
+        val memberDao = db.memberDao()
+        val transactionDao = db.transactionDao()
+
+        //repo initialization
+        accountRepo = AccountRepo(accountDao, currentUserId)
+        categoryRepo = CategoryRepo(categoryDao, currentUserId)
+        memberRepo = MemberRepo(memberDao, currentUserId)
+        transactionRepo = TransactionRepo(transactionDao, accountDao, categoryDao, memberDao, currentUserId)
+
+
+        //listen for cloud changes
+        accountRepo.listenForCloudChanges()
+        categoryRepo.listenForCloudChanges()
+        memberRepo.listenForCloudChanges()
+        transactionRepo.listenForCloudChanges()
+
+
+        //other initialization methods
         initViews()
         setupClickListeners()
         setupDatePicker()
-
         setupTimePickers()
         loadDropdownData()
         updateTypeButtonStyles()
@@ -210,14 +251,14 @@ class AddTransactionActivity : AppCompatActivity() {
         accountArrow.isEnabled = false
         memberArrow.isEnabled = false
 
-        val userId = UserSession.userId
+        val userId = FirebaseAuth.getInstance().currentUser?.uid?:return
 
-        Thread {
+        lifecycleScope.launch(Dispatchers.IO) {
             categories = db.categoryDao().getAll(userId)
             accounts = db.accountDao().getAll(userId)
             members = db.memberDao().getAll(userId)
 
-            runOnUiThread {
+            withContext(Dispatchers.Main) {
                 categoryCard.isEnabled = true
                 accountCard.isEnabled = true
                 memberCard.isEnabled = true
@@ -225,7 +266,8 @@ class AddTransactionActivity : AppCompatActivity() {
                 accountArrow.isEnabled = true
                 memberArrow.isEnabled = true
             }
-        }.start()
+
+        }
     }
 
     private fun setupClickListeners() {
@@ -360,9 +402,10 @@ class AddTransactionActivity : AppCompatActivity() {
         endCalendar.set(selectedDate.get(Calendar.YEAR), selectedDate.get(Calendar.MONTH), selectedDate.get(Calendar.DAY_OF_MONTH))
         val finalEndTime = endCalendar.time
 
-        val userId = UserSession.userId
+        val userId = FirebaseAuth.getInstance().currentUser?.uid?: ""
 
         val transaction = Transaction(
+            userId=userId,
             name = memoInput.text.toString().ifEmpty { "Transaction" },
             amount = amount,
             transactionType = selectedType,
@@ -373,28 +416,20 @@ class AddTransactionActivity : AppCompatActivity() {
             photo = photoPath != null,
             photoPath = photoPath,
             startTime = finalStartTime,
-            endTime = finalEndTime
+            endTime = finalEndTime,
+            lastUpdated = 0
         )
 
-        Thread {
-            db.transactionDao().insert(transaction)
-
-            //update the account balance when a transaction is added
-            val account = db.accountDao().getByIdSync(selectedAccountId!!,userId)
-            if (account != null) {
-                val updatedAmount = when (selectedType) {
-                    "income" -> account.amount + amount
-                    "expense" -> account.amount - amount
-                    else -> account.amount
-                }
-                db.accountDao().updateSync(account.copy(amount = updatedAmount))
-            }
-
-            runOnUiThread {
-                Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            try {
+                transactionRepo.saveTransaction(transaction)
+                Toast.makeText(this@AddTransactionActivity, "Transaction Saved", Toast.LENGTH_SHORT).show()
                 if (shouldFinish) finish() else clearForm()
             }
-        }.start()
+            catch(e: Exception){
+                Toast.makeText(this@AddTransactionActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun clearForm() {

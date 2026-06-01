@@ -26,9 +26,11 @@ class AccountRepo(private val accountDao: AccountDao, private val userId: String
                 lastUpdated = System.currentTimeMillis()
             )
 
+            //insert to room
             val generatedId = accountDao.insert(updatedAccount)
             android.util.Log.d("AccountRepo", "Room insert success, ID: $generatedId")
 
+            //Firebase save
             val accountForFirebase = updatedAccount.copy(id = generatedId.toInt())
 
             database.child(generatedId.toString()).setValue(accountForFirebase)

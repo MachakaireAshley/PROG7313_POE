@@ -13,8 +13,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.launch
+import java.util.Date
+
 class AccountsActivity : AppCompatActivity() {
 
     private lateinit var netAssetsAmount: TextView
@@ -26,6 +27,8 @@ class AccountsActivity : AppCompatActivity() {
     private lateinit var accountAdapter: AccountAdapter
     private lateinit var db: AppDatabase
     private lateinit var accountRepo: AccountRepo
+    private lateinit var transactionDao: TransactionDao
+    private lateinit var accountDao: AccountDao
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +43,11 @@ class AccountsActivity : AppCompatActivity() {
             return
         }
 
-        val accountDao= db.accountDao()
-        accountRepo= AccountRepo(accountDao, currentUserId)
+        transactionDao=db.transactionDao()
+        accountDao= db.accountDao()
+
+        val accountDaoForRepo= db.accountDao()
+        accountRepo= AccountRepo(accountDaoForRepo, currentUserId)
         accountRepo.listenForCloudChanges()
 
         initViews()
@@ -172,24 +178,22 @@ class AccountsActivity : AppCompatActivity() {
 
     private fun loadSummary() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid?: return
-        Thread {
-            val now = java.util.Date()
+        lifecycleScope.launch {
+            val now = Date()
             val start = getStartOfMonth(now)
             val end = getEndOfMonth(now)
-            val incomes = db.transactionDao().getByTypeBetweenDates(userId,"income", start, end)
-            val expenses = db.transactionDao().getByTypeBetweenDates(userId,"expense", start, end)
+
+            val incomes = transactionDao.getByTypeBetweenDates(userId, "income", start, end)
+            val expenses = transactionDao.getByTypeBetweenDates(userId, "expense", start, end)
             val totalIncome = incomes.sumOf { it.amount }
             val totalExpense = expenses.sumOf { it.amount }
-            //sum of all money within all accounts
-            val accounts = db.accountDao().getAll(userId)
+            val accounts = accountDao.getAll(userId)
             val netAssets = accounts.sumOf { it.amount }
 
-            runOnUiThread {
-                accountIncomeAmount.text = "R %.2f".format(totalIncome)
-                accountExpenseAmount.text = "R %.2f".format(totalExpense)
-                netAssetsAmount.text = "R %.2f".format(netAssets)
-            }
-        }.start()
+            accountIncomeAmount.text = "R %.2f".format(totalIncome)
+            accountExpenseAmount.text = "R %.2f".format(totalExpense)
+            netAssetsAmount.text = "R %.2f".format(netAssets)
+        }
     }
 
     private fun getStartOfMonth(date: java.util.Date): java.util.Date {
