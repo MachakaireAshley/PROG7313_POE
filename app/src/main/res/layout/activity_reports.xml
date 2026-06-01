@@ -34,7 +34,6 @@
                 android:src="@drawable/ic_logo"
                 android:contentDescription="@string/app_name" />
 
-
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -55,8 +54,6 @@
             android:padding="16dp"
             android:paddingBottom="24dp">
 
-
-
             <!-- Date Range Selector -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -65,7 +62,6 @@
                 android:weightSum="2"
                 android:layout_marginBottom="12dp">
 
-                <!-- From Date -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/fromDateCard"
                     android:layout_width="0dp"
@@ -105,7 +101,6 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- To Date -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/toDateCard"
                     android:layout_width="0dp"
@@ -147,7 +142,7 @@
 
             </LinearLayout>
 
-            <!-- Spending Goal Card -->
+            <!-- Spending Goal Card (ADDED Progress Bar inside) -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/spendingGoalCard"
                 android:layout_width="match_parent"
@@ -172,7 +167,6 @@
                         android:textColor="@color/primary_text"
                         android:layout_marginBottom="12dp" />
 
-                    <!-- Min / Max row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -223,7 +217,17 @@
 
                     </LinearLayout>
 
-                    <!-- Status -->
+                    <!-- NEW: Visual Progress Bar -->
+                    <ProgressBar
+                        android:id="@+id/goalProgressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:max="100"
+                        android:progressTint="@color/custom_blue" />
+
                     <TextView
                         android:id="@+id/goalStatusText"
                         android:layout_width="match_parent"
@@ -239,10 +243,7 @@
 
             </androidx.cardview.widget.CardView>
 
-
-
-
-            <!-- Filter Row -->
+            <!-- Filter Row (unchanged) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -250,7 +251,6 @@
                 android:weightSum="2"
                 android:layout_marginBottom="24dp">
 
-                <!-- Month/Year Selector -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/monthSelectorCard"
                     android:layout_width="0dp"
@@ -295,7 +295,6 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- Category Filter -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/categoryFilterCard"
                     android:layout_width="0dp"
@@ -342,7 +341,43 @@
 
             </LinearLayout>
 
-            <!-- Pie Chart Section -->
+            <!-- Bar Chart Card - container for programmatically added BarChartView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/barChartCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:background="@color/white">
+
+                    <!-- Placeholder where the BarChartView will be added programmatically -->
+                    <FrameLayout
+                        android:id="@+id/chartContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/graphGoalsLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Min: R0  |  Max: R5000"
+                        android:textSize="12sp"
+                        android:textColor="@color/secondary_text"
+                        android:layout_gravity="center" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <!-- Pie Chart Section (ORIGINAL - KEPT INTACT) -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/pieChartCard"
                 android:layout_width="match_parent"
@@ -359,7 +394,6 @@
                     android:padding="20dp"
                     android:background="@color/white">
 
-                    <!-- Pie Chart Placeholder  -->
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -374,7 +408,6 @@
 
                     </FrameLayout>
 
-                    <!-- Dynamic Legend Container -->
                     <LinearLayout
                         android:id="@+id/legendContainer"
                         android:layout_width="match_parent"
@@ -382,7 +415,6 @@
                         android:orientation="vertical"
                         android:layout_marginTop="16dp">
 
-                        <!-- Legend items will be added dynamically here -->
                         <HorizontalScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -404,7 +436,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Category Details Section -->
+            <!-- Category Details Section (unchanged) -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/categoryDetailsCard"
                 android:layout_width="match_parent"
@@ -421,7 +453,6 @@
                     android:padding="16dp"
                     android:background="@color/white">
 
-                    <!-- Total Expenses -->
                     <LinearLayout
                         android:id="@+id/totalExpensesLayout"
                         android:layout_width="match_parent"
@@ -453,7 +484,6 @@
 
                     </LinearLayout>
 
-                    <!-- Table Header -->
                     <LinearLayout
                         android:id="@+id/tableHeader"
                         android:layout_width="match_parent"
@@ -507,27 +537,6 @@
 
                     </LinearLayout>
 
-                    <!-- Empty State -->
-                    <LinearLayout
-                        android:id="@+id/emptyStateLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="32dp"
-                        android:gravity="center"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="No expense data available"
-                            android:textSize="14sp"
-                            android:textColor="@android:color/darker_gray"
-                            android:gravity="center" />
-
-                    </LinearLayout>
-
-                    <!-- RecyclerView for Categories -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/categoriesRecyclerView"
                         android:layout_width="match_parent"

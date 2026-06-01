@@ -2,19 +2,22 @@ package com.example.prog7313_poe
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.FrameLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.*
-import kotlin.math.roundToInt
-import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
+import kotlin.math.roundToInt
 
 class ReportsActivity : AppCompatActivity() {
 
@@ -26,16 +29,14 @@ class ReportsActivity : AppCompatActivity() {
 
     private lateinit var fromDateText: TextView
     private lateinit var toDateText: TextView
-
-
-    //repo variables
-    private lateinit var transactionRepo: TransactionRepo
-    private lateinit var categoryRepo: CategoryRepo
-
-
     private lateinit var minGoalText: TextView
     private lateinit var maxGoalText: TextView
     private lateinit var goalStatusText: TextView
+
+    // These will hold references to the graph views
+    private lateinit var barChart: BarChartView
+    private lateinit var graphGoalsLabel: TextView
+    private lateinit var goalProgressBar: ProgressBar
 
     private var startDate = Calendar.getInstance().apply {
         set(Calendar.DAY_OF_MONTH, 1)
@@ -57,45 +58,39 @@ class ReportsActivity : AppCompatActivity() {
 
     private val dateFormat = java.text.SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reports)
         db = AppDatabase.getDatabase(this)
 
-            //repo initialization and user
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
         if (currentUserId == null) {
             finish()
             return
         }
 
-        val transactionDao = db.transactionDao()
-        val accountDao = db.accountDao()
-
-        transactionRepo = TransactionRepo(transactionDao, accountDao, db.categoryDao(), db.memberDao(), currentUserId)
-        categoryRepo = CategoryRepo(db.categoryDao(), currentUserId)
-
-        transactionRepo.listenForCloudChanges()
-        categoryRepo.listenForCloudChanges()
-
-
-
+        // Find all standard views
         monthYearText = findViewById(R.id.monthYearText)
         totalExpenses = findViewById(R.id.totalExpenses)
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView)
         bottomNav = findViewById(R.id.bottomNavigationView)
-
-
-
         fromDateText = findViewById(R.id.fromDateText)
         toDateText = findViewById(R.id.toDateText)
-
-
         minGoalText = findViewById(R.id.minGoalText)
         maxGoalText = findViewById(R.id.maxGoalText)
         goalStatusText = findViewById(R.id.goalStatusText)
+        graphGoalsLabel = findViewById(R.id.graphGoalsLabel)
+        goalProgressBar = findViewById(R.id.goalProgressBar)
 
+        // +++ NEW CODE: Add BarChartView programmatically +++
+        val chartContainer = findViewById<FrameLayout>(R.id.chartContainer)
+        barChart = BarChartView(this)
+        barChart.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        )
+        chartContainer.addView(barChart)
+        // +++ END OF NEW CODE +++
 
         fromDateText.text = dateFormat.format(startDate.time)
         toDateText.text = dateFormat.format(endDate.time)
@@ -103,7 +98,6 @@ class ReportsActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         min = prefs.getFloat("min_budget", 0f)
         max = prefs.getFloat("max_budget", 5000f)
-
 
         categoriesRecyclerView.layoutManager = LinearLayoutManager(this)
         setupBottomNav()
@@ -121,37 +115,31 @@ class ReportsActivity : AppCompatActivity() {
                     finish()
                     true
                 }
-
                 R.id.nav_accounts -> {
                     startActivity(Intent(this, AccountsActivity::class.java))
                     finish()
                     true
                 }
-
                 R.id.nav_add -> {
                     startActivity(Intent(this, AddTransactionActivity::class.java))
                     true
                 }
-
                 R.id.nav_reports -> true
                 R.id.nav_settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
                     finish()
                     true
                 }
-
                 else -> false
             }
         }
     }
 
     private fun setupFilters() {
-        // From date card - opens a date picker for the start date
         findViewById<android.view.View>(R.id.fromDateCard).setOnClickListener {
             android.app.DatePickerDialog(
                 this,
                 { _, year, month, day ->
-                    // User picked a date, update startDate
                     val tempStart = Calendar.getInstance().apply {
                         set(year, month, day)
                         set(Calendar.HOUR_OF_DAY, 0)
@@ -159,18 +147,12 @@ class ReportsActivity : AppCompatActivity() {
                         set(Calendar.SECOND, 0)
                         set(Calendar.MILLISECOND, 0)
                     }
-
                     if (tempStart.after(endDate)) {
-                        Toast.makeText(
-                            this,
-                            "Start date cannot be after end date",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this, "Start date cannot be after end date", Toast.LENGTH_SHORT).show()
                         return@DatePickerDialog
                     }
                     startDate = tempStart
                     fromDateText.text = dateFormat.format(startDate.time)
-
                     loadReportData()
                 },
                 startDate.get(Calendar.YEAR),
@@ -178,7 +160,6 @@ class ReportsActivity : AppCompatActivity() {
                 startDate.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
-
 
         findViewById<android.view.View>(R.id.toDateCard).setOnClickListener {
             android.app.DatePickerDialog(
@@ -191,19 +172,12 @@ class ReportsActivity : AppCompatActivity() {
                         set(Calendar.SECOND, 59)
                         set(Calendar.MILLISECOND, 999)
                     }
-
-
                     if (startDate.after(tempEnd)) {
-                        Toast.makeText(
-                            this,
-                            "End date cannot be before start date",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this, "End date cannot be before start date", Toast.LENGTH_SHORT).show()
                         return@DatePickerDialog
                     }
                     endDate = tempEnd
                     toDateText.text = dateFormat.format(endDate.time)
-
                     loadReportData()
                 },
                 endDate.get(Calendar.YEAR),
@@ -212,12 +186,10 @@ class ReportsActivity : AppCompatActivity() {
             ).show()
         }
 
-
         findViewById<android.view.View>(R.id.categoryFilterCard).setOnClickListener {
-            Toast.makeText(this, "Category filter (full version)", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Category filter coming soon", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun loadReportData() {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -226,10 +198,11 @@ class ReportsActivity : AppCompatActivity() {
             val start = startDate.time
             val end = endDate.time
 
-            val expenses = transactionRepo.getTransactionsBetweenDates(currentUserId, start, end, "expense")
+            val expenses = withContext(Dispatchers.IO) {
+                db.transactionDao().getByTypeBetweenDates(currentUserId, "expense", start, end)
+            }
             val total = expenses.sumOf { it.amount }
 
-            // Handle empty state early
             if (expenses.isEmpty()) {
                 monthYearText.text = "${dateFormat.format(start)} - ${dateFormat.format(end)}"
                 totalExpenses.text = "R 0.00"
@@ -237,11 +210,16 @@ class ReportsActivity : AppCompatActivity() {
                 categoriesRecyclerView.adapter = CategoryStatAdapter(emptyList())
                 minGoalText.text = "Min: R %.2f".format(min)
                 maxGoalText.text = "Max: R %.2f".format(max)
+
+                barChart.setData(emptyList(), min, max)
+                graphGoalsLabel.text = "Min: R${"%.2f".format(min)}   Max: R${"%.2f".format(max)}"
+                goalProgressBar.progress = 0
                 return@launch
             }
 
-            // Get all categories
-            val categories = categoryRepo.getCategoriesList()
+            val categories = withContext(Dispatchers.IO) {
+                db.categoryDao().getAll(currentUserId)
+            }
             val categoryMap = categories.associateBy { it.id }
 
             val grouped = expenses.groupBy { it.categoryId }
@@ -250,43 +228,43 @@ class ReportsActivity : AppCompatActivity() {
             for ((catId, list) in grouped) {
                 val sum = list.sumOf { it.amount }
                 val percentage = if (total > 0) (sum / total * 100).roundToInt() else 0
-
                 var categoryName = categoryMap[catId]?.name
                 if (categoryName == null) {
                     categoryName = withContext(Dispatchers.IO) {
                         db.categoryDao().getNameById(catId, currentUserId)
                     }
                 }
-                categoryTotals.add(
-                    CategoryStat(
-                        rank = "",
-                        name = categoryName,
-                        amount = sum,
-                        ratio = "$percentage%"
-                    )
-                )
+                categoryTotals.add(CategoryStat("", categoryName ?: "Unknown", sum, "$percentage%"))
             }
 
-            // Sort by highest spending
             categoryTotals.sortByDescending { it.amount }
-
-            // Add ranking (1, 2, 3...)
             val rankedList = categoryTotals.mapIndexed { index, item ->
                 item.copy(rank = (index + 1).toString())
             }
 
-            // Update UI
             monthYearText.text = "${dateFormat.format(start)} - ${dateFormat.format(end)}"
             totalExpenses.text = "R %.2f".format(total)
             categoriesRecyclerView.adapter = CategoryStatAdapter(rankedList)
+
             minGoalText.text = "Min: R %.2f".format(min)
             maxGoalText.text = "Max: R %.2f".format(max)
-
             goalStatusText.text = when {
                 total < min -> "Below minimum spending"
                 total > max -> "Above maximum spending"
                 else -> "Within budget"
             }
+
+            val progressPercent = if (max > 0) ((total / max) * 100).toInt().coerceIn(0, 100) else 0
+            goalProgressBar.progress = progressPercent
+            when {
+                total < min -> goalProgressBar.progressTintList = ContextCompat.getColorStateList(this@ReportsActivity, R.color.income_green)
+                total > max -> goalProgressBar.progressTintList = ContextCompat.getColorStateList(this@ReportsActivity, R.color.expense_red)
+                else -> goalProgressBar.progressTintList = ContextCompat.getColorStateList(this@ReportsActivity, R.color.custom_blue)
+            }
+
+            val chartData = rankedList.map { BarChartView.BarData(it.name, it.amount.toFloat()) }
+            barChart.setData(chartData, min, max)
+            graphGoalsLabel.text = "Min: R${"%.2f".format(min)}   Max: R${"%.2f".format(max)}"
         }
     }
 
@@ -297,13 +275,10 @@ class ReportsActivity : AppCompatActivity() {
         max = prefs.getFloat("max_budget", 5000f)
         loadReportData()
     }
-
 }
-
 
 data class CategoryStat(
     val rank: String,
-    val name: String?,
+    val name: String,
     val amount: Double,
-    val ratio: String
-)
+    val ratio: String)
