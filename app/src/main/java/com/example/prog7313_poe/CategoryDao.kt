@@ -13,7 +13,7 @@ interface CategoryDao {
     suspend fun insert(category: Category): Long
 
     @Query("SELECT * FROM category_table WHERE userId = :userId")
-    fun getAll(userId: String): List<Category>
+    suspend fun getAll(userId: String): List<Category>
 
     @Query("SELECT * FROM category_table WHERE userId = :userId ORDER BY name ASC")
     fun getCategoriesByUser(userId: String): Flow<List<Category>>

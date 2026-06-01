@@ -12,7 +12,9 @@ import java.util.*
 import kotlin.math.roundToInt
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ReportsActivity : AppCompatActivity() {
 
@@ -251,7 +253,9 @@ class ReportsActivity : AppCompatActivity() {
 
                 var categoryName = categoryMap[catId]?.name
                 if (categoryName == null) {
-                    categoryName = db.categoryDao().getNameById(catId, currentUserId) ?: "Unknown"
+                    categoryName = withContext(Dispatchers.IO) {
+                        db.categoryDao().getNameById(catId, currentUserId)
+                    }
                 }
                 categoryTotals.add(
                     CategoryStat(
@@ -299,7 +303,7 @@ class ReportsActivity : AppCompatActivity() {
 
 data class CategoryStat(
     val rank: String,
-    val name: String,
+    val name: String?,
     val amount: Double,
     val ratio: String
 )

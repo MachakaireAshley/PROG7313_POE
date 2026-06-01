@@ -15,9 +15,7 @@ class TransactionRepo(private val transactionDao: TransactionDao, private val ac
         .child("transactions")
 
 
-    fun getTransactions(): Flow<List<Transaction>>{
-        return transactionDao.getTransactionsByUser(userId)
-    }
+
 
     suspend fun saveTransaction(transaction: Transaction) {
         try {
