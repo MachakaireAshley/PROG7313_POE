@@ -4,7 +4,7 @@
 
 ## Purpose of the Application
 
-PocketProtector is a personal budget/finance management app for Android. It helps users track their spending, set budget goals, and develop better money habits. The app stores all data online (Firebase) so users can access their finances from any device.
+PocketProtector is a personal budget/finance management app for Android. It helps users track their spending, set budget goals, and develop better money habits. The app stores all data online (Firebase) and on local storage (RoomDB) so users can access their finances from any device.
 
 ---
 
