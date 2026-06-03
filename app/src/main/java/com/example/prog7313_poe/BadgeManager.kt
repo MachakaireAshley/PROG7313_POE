@@ -19,11 +19,11 @@ class BadgeManager {
             ),
 
             Badge(
-                "First Budget",
-                "Create first budget",
+                "First Transaction",
+                "Create first Transaction",
                 "📊",
                 BadgeType.BRONZE,
-                category = BadgeCategory.BUDGETING,
+                category = BadgeCategory.SAVINGS,
                 isUnlocked = transactionCount > 0
             )
 
