@@ -5,8 +5,11 @@
 | Name                        | Student Number | Group Number |
 
 | Ashley Spiwe Machakaire     | ST104433423    | 3            |
+
 | Enhle-Imbali Naledi Mokholo | ST104437202    | 2            |
+
 | Melody Sih-Jin Lee          | ST104519042    | 2            |
+
 | Cindy Guan-Ying Wu          | ST103134012    | 2            |
 
 ## Purpose of the Application
