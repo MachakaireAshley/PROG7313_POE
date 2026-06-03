@@ -2,6 +2,7 @@ package com.example.prog7313_poe
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -9,7 +10,7 @@ import java.util.Date
 
 @Dao
 interface TransactionDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(transaction: Transaction): Long
 
     @Query("SELECT * FROM transaction_table WHERE userId = :userId")

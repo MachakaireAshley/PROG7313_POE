@@ -19,6 +19,6 @@ data class RecurringItem(
     val notes: String? = null,
     val lastUpdated: Long=0
 )
-{
-    constructor() : this(0,"", "", 0.0, 0,"", null, null, null, 0)
-}
+//{
+//    constructor() : this(0,"", "", 0.0, 0,"", null, null, null, 0)
+//}

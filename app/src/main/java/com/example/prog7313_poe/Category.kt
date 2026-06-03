@@ -14,6 +14,6 @@ data class Category(
     val lastUpdated: Long= 0
 
 )
-{
-    constructor() : this(0, "", "", 0, 0)
-}
+//{
+//    constructor() : this(0, "", "", 0, 0)
+//}
