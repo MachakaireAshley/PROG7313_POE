@@ -31,21 +31,18 @@ class HomeListActivity : AppCompatActivity() {
     private lateinit var db: AppDatabase
     private lateinit var prefs: SharedPreferences
 
-    // Date range views
     private lateinit var fromDateText: TextView
     private lateinit var toDateText: TextView
     private lateinit var fromDateCard: CardView
     private lateinit var toDateCard: CardView
 
-    //repo variables
     private lateinit var transactionRepo: TransactionRepo
     private lateinit var accountRepo: AccountRepo
 
-    // Date variables
     private var startDate: Date = Date()
     private var endDate: Date = Date()
     private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-    private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val monthYearFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +70,6 @@ class HomeListActivity : AppCompatActivity() {
         setupToggleButtons()
         setupDateRangeSelector()
 
-        // Initialize with current month
         initializeDefaultDateRange()
     }
 
@@ -93,7 +89,6 @@ class HomeListActivity : AppCompatActivity() {
         transactionsRecyclerView = findViewById(R.id.transactionsRecyclerView)
         bottomNav = findViewById(R.id.bottomNavigationView)
 
-        // Date range views
         fromDateText = findViewById(R.id.fromDateText)
         toDateText = findViewById(R.id.toDateText)
         fromDateCard = findViewById(R.id.fromDateCard)
@@ -145,7 +140,6 @@ class HomeListActivity : AppCompatActivity() {
         fromDateCard.setOnClickListener {
             showDatePickerDialog(true)
         }
-
         toDateCard.setOnClickListener {
             showDatePickerDialog(false)
         }
@@ -205,11 +199,8 @@ class HomeListActivity : AppCompatActivity() {
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         lifecycleScope.launch {
-            // Use the selected date range
             val incomes = transactionRepo.getTransactionsBetweenDates(currentUserId, startDate, endDate, "income")
             val expenses = transactionRepo.getTransactionsBetweenDates(currentUserId, startDate, endDate, "expense")
-            android.util.Log.d("HomeList", "Incomes count: ${incomes.size}")
-            android.util.Log.d("HomeList", "Expenses count: ${expenses.size}")
             val totalIncome = incomes.sumOf { it.amount }
             val totalExpense = expenses.sumOf { it.amount }
             val net = totalIncome - totalExpense
@@ -231,6 +222,37 @@ class HomeListActivity : AppCompatActivity() {
 
             val adapter = TransactionAdapter(recent)
             transactionsRecyclerView.adapter = adapter
+
+            // ---------- BUDGET TRACKING FOR BADGES ----------
+            checkAndUpdateMonthlyBudgetStatus(totalExpense, startDate, endDate)
+        }
+    }
+
+    /**
+     * Checks if the selected date range is a full calendar month and updates months_within_budget.
+     */
+    private fun checkAndUpdateMonthlyBudgetStatus(totalExpense: Double, start: Date, end: Date) {
+        val maxBudget = prefs.getFloat("max_budget", 5000f)
+        val calStart = Calendar.getInstance().apply { time = start }
+        val calEnd = Calendar.getInstance().apply { time = end }
+
+        val isFullMonth = (calStart.get(Calendar.DAY_OF_MONTH) == 1 &&
+                calEnd.get(Calendar.DAY_OF_MONTH) == calEnd.getActualMaximum(Calendar.DAY_OF_MONTH) &&
+                calStart.get(Calendar.MONTH) == calEnd.get(Calendar.MONTH) &&
+                calStart.get(Calendar.YEAR) == calEnd.get(Calendar.YEAR))
+
+        if (isFullMonth) {
+            val currentMonth = monthYearFormat.format(start)
+            val lastCheckedMonth = prefs.getString("last_budget_check_month", "")
+            val wasWithinBudget = totalExpense <= maxBudget
+
+            if (wasWithinBudget && currentMonth != lastCheckedMonth) {
+                val currentCount = prefs.getInt("months_within_budget", 0)
+                prefs.edit()
+                    .putInt("months_within_budget", currentCount + 1)
+                    .putString("last_budget_check_month", currentMonth)
+                    .apply()
+            }
         }
     }
 

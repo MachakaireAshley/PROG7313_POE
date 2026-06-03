@@ -34,7 +34,6 @@
                 android:src="@drawable/ic_logo"
                 android:contentDescription="App Logo" />
 
-
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
 
@@ -46,16 +45,12 @@
         app:layout_constraintTop_toBottomOf="@id/titleBar"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView">
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
-
-            <!-- Settings Items -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,15 +91,13 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <!--go to activity_recurring_items.xml-->
                         <ImageButton
                             android:id="@+id/setting_RecurringItemsButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
                             app:tint="@color/secondary_text"
-                            android:contentDescription="Recurring Items"/>
-
+                            android:contentDescription="Recurring Items" />
 
                     </LinearLayout>
 
@@ -149,7 +142,6 @@
                             app:tint="@color/secondary_text"
                             tools:ignore="SpeakableTextPresentCheck" />
 
-
                     </LinearLayout>
 
                     <View
@@ -185,15 +177,13 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <!--go to activity_category.xml-->
                         <ImageButton
                             android:id="@+id/setting_CategoriesButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
                             app:tint="@color/secondary_text"
-                            android:contentDescription="Categories"/>
-
+                            android:contentDescription="Categories" />
 
                     </LinearLayout>
 
@@ -230,15 +220,13 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <!--go to activity_member.xml-->
                         <ImageButton
                             android:id="@+id/setting_MembersButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
                             app:tint="@color/secondary_text"
-                            android:contentDescription="Members"/>
-
+                            android:contentDescription="Members" />
 
                     </LinearLayout>
 
@@ -281,7 +269,7 @@
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
                             app:tint="@color/secondary_text"
-                            android:contentDescription="Theme"/>
+                            android:contentDescription="Theme" />
 
                     </LinearLayout>
 
@@ -318,16 +306,13 @@
                             android:textColor="@color/primary_text"
                             android:layout_marginStart="16dp" />
 
-                        <!--if user does have pin, go to activity_pin_lock and after entering right pin, go to dialog_setup_pin.xml-->
-                        <!--if user does NOT have pin yet, go to dialog_setup_pin.xml-->
                         <ImageButton
                             android:id="@+id/setting_PinLockButton"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
                             app:tint="@color/secondary_text"
-                            android:contentDescription="Pin Lock"/>
-
+                            android:contentDescription="Pin Lock" />
 
                     </LinearLayout>
 
@@ -370,9 +355,10 @@
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
                             app:tint="@color/secondary_text"
-                            android:contentDescription="Export CSV"/>
+                            android:contentDescription="Export CSV" />
 
                     </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
@@ -412,12 +398,11 @@
                             android:layout_height="20dp"
                             android:src="@drawable/ic_setting_rightarrow"
                             app:tint="@color/secondary_text"
-                            android:contentDescription="My Badges"/>
+                            android:contentDescription="My Badges" />
 
                     </LinearLayout>
+
                 </LinearLayout>
-
-
 
             </androidx.cardview.widget.CardView>
 

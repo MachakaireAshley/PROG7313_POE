@@ -79,6 +79,7 @@ class SettingsActivity : AppCompatActivity() {
             Toast.makeText(this, "Export CSV coming soon", Toast.LENGTH_SHORT).show()
         }
 
+        // Badges entry
         findViewById<android.view.View>(R.id.badgesSetting).setOnClickListener {
             startActivity(Intent(this, BadgesActivity::class.java))
         }
@@ -117,6 +118,9 @@ class SettingsActivity : AppCompatActivity() {
                         .putFloat("max_budget", max.toFloat())
                         .apply()
 
+                    // Increment budget count for badge (First Budget)
+                    updateBudgetCount()
+
                     Toast.makeText(this, "Budget range updated", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Invalid values", Toast.LENGTH_SHORT).show()
@@ -144,5 +148,26 @@ class SettingsActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    // Helper methods for badge tracking
+
+    private fun updateBudgetCount() {
+        val currentCount = prefs.getInt("budget_count", 0)
+        prefs.edit().putInt("budget_count", currentCount + 1).apply()
+    }
+
+    // Call this function at the end of each month (from ReportsActivity or HomeListActivity)
+    fun updateMonthsWithinBudget(wasWithinBudget: Boolean) {
+        if (wasWithinBudget) {
+            val currentMonths = prefs.getInt("months_within_budget", 0)
+            prefs.edit().putInt("months_within_budget", currentMonths + 1).apply()
+        }
+    }
+
+    // Call this when a savings goal is reached (e.g., when total savings crosses 100, 1000, etc.)
+    fun updateGoalsReached() {
+        val currentGoals = prefs.getInt("goals_reached", 0)
+        prefs.edit().putInt("goals_reached", currentGoals + 1).apply()
     }
 }

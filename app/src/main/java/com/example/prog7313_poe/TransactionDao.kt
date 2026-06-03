@@ -44,4 +44,13 @@ interface TransactionDao {
 
     @Query("SELECT SUM(amount) FROM transaction_table WHERE userId = :userId AND transactionType = 'income'")
     suspend fun getTotalSavings(userId: String): Double?
+
+    @Query("SELECT COUNT(*) FROM transaction_table WHERE transactionType = 'expense' AND memberId IN (SELECT id FROM member_table WHERE userId = :userId)")
+    suspend fun getExpenseCount(userId: String): Int
+
+    @Query("SELECT date FROM transaction_table WHERE transactionType = 'expense' AND memberId IN (SELECT id FROM member_table WHERE userId = :userId) ORDER BY date ASC")
+    suspend fun getExpenseDates(userId: String): List<Date>
+
+    @Query("SELECT COUNT(*) FROM transaction_table WHERE transactionType = 'expense' AND memberId IN (SELECT id FROM member_table WHERE userId = :userId) AND date BETWEEN :start AND :end")
+    suspend fun getExpenseCountBetweenDates(userId: String, start: Date, end: Date): Int
 }

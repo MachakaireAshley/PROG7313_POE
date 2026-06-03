@@ -1,27 +1,27 @@
 package com.example.prog7313_poe
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.prog7313_poe.databinding.ActivityBadgesBinding
+import androidx.recyclerview.widget.RecyclerView
 
 class BadgesActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityBadgesBinding
-    private val viewModel: BadgeViewModel by viewModels()
+    private lateinit var badgesRecyclerView: RecyclerView   // ← changed name to match layout
+    private lateinit var viewModel: BadgeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityBadgesBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_badges)
 
-        binding.badgesRecyclerView.layoutManager = LinearLayoutManager(this)
+        badgesRecyclerView = findViewById(R.id.badgesRecyclerView)   // ← correct ID
+        badgesRecyclerView.layoutManager = LinearLayoutManager(this)
 
+        viewModel = ViewModelProvider(this)[BadgeViewModel::class.java]
         viewModel.badges.observe(this) { badges ->
-            binding.badgesRecyclerView.adapter = BadgeAdapter(badges)
+            val adapter = BadgeAdapter(badges)
+            badgesRecyclerView.adapter = adapter
         }
-
-        binding.backButton.setOnClickListener { finish() }
     }
 }

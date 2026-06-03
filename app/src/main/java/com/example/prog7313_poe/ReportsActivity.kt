@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -33,7 +34,6 @@ class ReportsActivity : AppCompatActivity() {
     private lateinit var maxGoalText: TextView
     private lateinit var goalStatusText: TextView
 
-    // These will hold references to the graph views
     private lateinit var barChart: BarChartView
     private lateinit var graphGoalsLabel: TextView
     private lateinit var goalProgressBar: ProgressBar
@@ -56,7 +56,8 @@ class ReportsActivity : AppCompatActivity() {
     private var min = 0f
     private var max = 5000f
 
-    private val dateFormat = java.text.SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+    private val monthYearFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +70,6 @@ class ReportsActivity : AppCompatActivity() {
             return
         }
 
-        // Find all standard views
         monthYearText = findViewById(R.id.monthYearText)
         totalExpenses = findViewById(R.id.totalExpenses)
         categoriesRecyclerView = findViewById(R.id.categoriesRecyclerView)
@@ -82,7 +82,6 @@ class ReportsActivity : AppCompatActivity() {
         graphGoalsLabel = findViewById(R.id.graphGoalsLabel)
         goalProgressBar = findViewById(R.id.goalProgressBar)
 
-        // +++ NEW CODE: Add BarChartView programmatically +++
         val chartContainer = findViewById<FrameLayout>(R.id.chartContainer)
         barChart = BarChartView(this)
         barChart.layoutParams = FrameLayout.LayoutParams(
@@ -90,7 +89,6 @@ class ReportsActivity : AppCompatActivity() {
             FrameLayout.LayoutParams.MATCH_PARENT
         )
         chartContainer.addView(barChart)
-        // +++ END OF NEW CODE +++
 
         fromDateText.text = dateFormat.format(startDate.time)
         toDateText.text = dateFormat.format(endDate.time)
@@ -265,6 +263,44 @@ class ReportsActivity : AppCompatActivity() {
             val chartData = rankedList.map { BarChartView.BarData(it.name, it.amount.toFloat()) }
             barChart.setData(chartData, min, max)
             graphGoalsLabel.text = "Min: R${"%.2f".format(min)}   Max: R${"%.2f".format(max)}"
+
+            // ---------- BUDGET TRACKING FOR BADGES ----------
+            checkAndUpdateMonthlyBudgetStatus(total, start, end)
+        }
+    }
+
+    /**
+     * Checks if the selected date range is a full calendar month and if the user stayed within budget.
+     * Updates SharedPreferences for months_within_budget (used by badges).
+     */
+    private fun checkAndUpdateMonthlyBudgetStatus(totalExpense: Double, start: Date, end: Date) {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val maxBudget = prefs.getFloat("max_budget", 5000f)
+
+        // Check if the selected range is exactly one calendar month
+        val calStart = Calendar.getInstance().apply { time = start }
+        val calEnd = Calendar.getInstance().apply { time = end }
+
+        val isFullMonth = (calStart.get(Calendar.DAY_OF_MONTH) == 1 &&
+                calEnd.get(Calendar.DAY_OF_MONTH) == calEnd.getActualMaximum(Calendar.DAY_OF_MONTH) &&
+                calStart.get(Calendar.MONTH) == calEnd.get(Calendar.MONTH) &&
+                calStart.get(Calendar.YEAR) == calEnd.get(Calendar.YEAR))
+
+        if (isFullMonth) {
+            val currentMonth = monthYearFormat.format(start)
+            val lastCheckedMonth = prefs.getString("last_budget_check_month", "")
+
+            val wasWithinBudget = totalExpense <= maxBudget
+
+            if (wasWithinBudget && currentMonth != lastCheckedMonth) {
+                val currentCount = prefs.getInt("months_within_budget", 0)
+                prefs.edit()
+                    .putInt("months_within_budget", currentCount + 1)
+                    .putString("last_budget_check_month", currentMonth)
+                    .apply()
+                // Optional: show a toast to inform user
+                // Toast.makeText(this, "Congratulations! Month within budget recorded.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -281,4 +317,5 @@ data class CategoryStat(
     val rank: String,
     val name: String,
     val amount: Double,
-    val ratio: String)
+    val ratio: String
+)
