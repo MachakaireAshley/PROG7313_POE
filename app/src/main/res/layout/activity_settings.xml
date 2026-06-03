@@ -373,8 +373,51 @@
                             android:contentDescription="Export CSV"/>
 
                     </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider_color"
+                        android:layout_marginStart="56dp" />
 
+                    <!-- Badges -->
+                    <LinearLayout
+                        android:id="@+id/badgesSetting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:gravity="center_vertical"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_setting_export"
+                            app:tint="@color/custom_blue" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="My Badges"
+                            android:textSize="16sp"
+                            android:textColor="@color/primary_text"
+                            android:layout_marginStart="16dp" />
+
+                        <ImageButton
+                            android:id="@+id/setting_BadgesButton"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_setting_rightarrow"
+                            app:tint="@color/secondary_text"
+                            android:contentDescription="My Badges"/>
+
+                    </LinearLayout>
                 </LinearLayout>
+
+
 
             </androidx.cardview.widget.CardView>
 

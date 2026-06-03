@@ -11,6 +11,7 @@ android {
 
     buildFeatures {
         viewBinding =true
+        dataBinding = true
     }
 
     defaultConfig {
@@ -60,6 +61,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
 
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")

@@ -64,6 +64,9 @@
             android:name=".PinLockActivity"
             android:exported="false" />
 
+        <activity android:name=".BadgesActivity"
+            android:exported="false"/>
+
 
         <provider
             android:name="androidx.core.content.FileProvider"

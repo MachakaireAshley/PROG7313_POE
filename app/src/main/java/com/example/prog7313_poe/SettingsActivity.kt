@@ -78,6 +78,10 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<android.view.View>(R.id.exportCsvSetting).setOnClickListener {
             Toast.makeText(this, "Export CSV coming soon", Toast.LENGTH_SHORT).show()
         }
+
+        findViewById<android.view.View>(R.id.badgesSetting).setOnClickListener {
+            startActivity(Intent(this, BadgesActivity::class.java))
+        }
     }
 
     private fun showBudgetDialog() {

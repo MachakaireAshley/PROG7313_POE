@@ -38,4 +38,10 @@ interface TransactionDao {
 
     @Query("DELETE FROM transaction_table WHERE id = :id AND userId = :userId")
     suspend fun deleteById(id: Int, userId: String)
+
+    @Query("SELECT COUNT(*) FROM transaction_table WHERE userId = :userId")
+    suspend fun getTransactionCount(userId: String): Int
+
+    @Query("SELECT SUM(amount) FROM transaction_table WHERE userId = :userId AND transactionType = 'income'")
+    suspend fun getTotalSavings(userId: String): Double?
 }

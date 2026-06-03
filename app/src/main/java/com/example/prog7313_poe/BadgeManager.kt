@@ -4,7 +4,7 @@ class BadgeManager {
 
     fun getBadges(
         totalSavings: Double,
-        budgetCount: Int
+        transactionCount: Int
     ): List<Badge> {
 
         return listOf(
@@ -24,7 +24,7 @@ class BadgeManager {
                 "📊",
                 BadgeType.BRONZE,
                 category = BadgeCategory.BUDGETING,
-                isUnlocked = budgetCount > 0
+                isUnlocked = transactionCount > 0
             )
 
         )
