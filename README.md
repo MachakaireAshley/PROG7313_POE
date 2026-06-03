@@ -36,3 +36,27 @@ PocketProtector is a personal budget/finance management app for Android. It help
 PocketProtector successfully meets all mandatory POE requirements: a spending graph with min/max goals, a visual progress indicator, and full online data storage. The two own features (gamification and calendar/list toggle) add extra value beyond the specification. The app runs on a real Android phone, stores data securely in Firebase, and is fully documented on GitHub with automated testing. It provides a complete, user‑friendly solution for personal finance management.
 
 ---
+
+## Screenshots
+
+provided in the Word document
+
+## Demonstration Video 
+
+This is the full YouTube video: https://youtu.be/Qpg-irOdt8U 
+
+This YouTube Short that shows Cloud storage part that we forgot to speak on in the original video: https://youtube.com/shorts/gNi8XkCVgW8 
+
+## AI Declaration 
+
+I declare that code suggested by AI was used but reviewed, tested, and integrated by the group. Below we included the links showing the conversations that were had.The AI did not write the entire application.  
+
+Deepseek: https://chat.deepseek.com/share/1pps8nbl10i3b93qdh 
+
+Claude: https://claude.ai/share/fd17bdcd-dc9a-4851-92f8-63198b388024 
+
+Deepseek: https://chat.deepseek.com/a/chat/s/d87d8513-25e9-4360-b198-955e47d5b4d6 
+
+Deepseek: https://chat.deepseek.com/a/chat/s/bb1f227e-c33b-4bbf-aee7-77afd053a5ab 
+
+ 
