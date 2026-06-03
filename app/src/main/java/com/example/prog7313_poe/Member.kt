@@ -11,6 +11,6 @@ data class Member(
     val name: String="",
     val lastUpdated: Long=0,
 )
-{
-constructor() : this(0, "", "", 0)
-}
+//{
+//constructor() : this(0, "", "", 0)
+//}
