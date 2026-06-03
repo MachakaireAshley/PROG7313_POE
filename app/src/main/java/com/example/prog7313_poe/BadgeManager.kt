@@ -13,14 +13,18 @@ class BadgeManager {
                 "First R100 Saved",
                 "Save R100",
                 "💰",
-                totalSavings >= 100
+                BadgeType.BRONZE,
+                category = BadgeCategory.CONSISTENCY,
+                isUnlocked = totalSavings >= 100
             ),
 
             Badge(
                 "First Budget",
                 "Create first budget",
                 "📊",
-                budgetCount > 0
+                BadgeType.BRONZE,
+                category = BadgeCategory.BUDGETING,
+                isUnlocked = budgetCount > 0
             )
 
         )

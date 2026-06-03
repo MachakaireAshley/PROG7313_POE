@@ -25,6 +25,6 @@ data class Transaction (
 
 )
 
-{
-    constructor() : this(0,"", "", 0.0, "", null, null, null, 0, 0, 0, false, null, 0)
-}
+//{
+//    constructor() : this(0,"", "", 0.0, "", null, null, null, 0, 0, 0, false, null, 0)
+//}

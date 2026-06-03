@@ -9,6 +9,10 @@ android {
     namespace = "com.example.prog7313_poe"
     compileSdk = 36
 
+    buildFeatures {
+        viewBinding =true
+    }
+
     defaultConfig {
         applicationId = "com.example.prog7313_poe"
         minSdk = 26
